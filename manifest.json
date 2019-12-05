@@ -28,10 +28,11 @@
   "content_scripts": [{
     "css": ["styles.css","twitch.css"],
     "js": ["content.js"],
-    "matches": ["https://www.twitch.tv/*"],
+    "matches": ["https://www.twitch.tv/*","https://mixer.com/*"],
     "run_at": "document_idle"
   }],
   "web_accessible_resources": [
+    "fonts/*.woff2",
     "/oauth2/*",
     "myimportfile1.html",
     "myimportfile2.html"
