@@ -1,19 +1,28 @@
 @font-face {
-    font-family: Roobert;
+    font-family: Twixer-Roobert;
     font-weight: 400;
-    src: url(https://static.twitchcdn.net/assets/Roobert-Regular-3fe213a3618624fd7b71.woff2) format("woff2"),url(https://static.twitchcdn.net/assets/Roobert-Regular-014ea096b0f865fa4dd9.woff) format("woff")
+    src: url('chrome-extension://__MSG_@@extension_id__/fonts/Roobert-Regular.woff2') format("woff2"),url('chrome-extension://__MSG_@@extension_id__/fonts/Roobert-Regular.woff') format("woff")
 }
 
 @font-face {
-    font-family: Roobert;
+    font-family: Twixer-Roobert;
     font-weight: 600;
-    src: url(https://static.twitchcdn.net/assets/Roobert-SemiBold-df85158a0012c224b021.woff2) format("woff2"),url(https://static.twitchcdn.net/assets/Roobert-SemiBold-48a406bf82c48cfaa849.woff) format("woff")
+    src: url('chrome-extension://__MSG_@@extension_id__/fonts/Roobert-SemiBold.woff2') format("woff2"),url('chrome-extension://__MSG_@@extension_id__/fonts/Roobert-SemiBold.woff') format("woff")
 }
 
 @font-face {
-    font-family: Roobert;
+    font-family: Twixer-Roobert;
     font-weight: 700;
-    src: url(https://static.twitchcdn.net/assets/Roobert-Bold-7fda562c82c09fbabec2.woff2) format("woff2"),url(https://static.twitchcdn.net/assets/Roobert-SemiBold-48a406bf82c48cfaa849.woff) format("woff")
+    src: url('chrome-extension://__MSG_@@extension_id__/fonts/Roobert-Bold.woff2') format("woff2"),url('chrome-extension://__MSG_@@extension_id__/fonts/Roobert-SemiBold.woff') format("woff")
+}
+.twixer-status-indicator{
+    background-color: #1fbaed;
+    border-radius: 9000px !important;
+    position: relative !important;
+    display: inline-block !important;
+    height: 9px;
+    width: 9px;
+
 }
 
 .channel-page{
@@ -21,7 +30,7 @@
 }
 #mixer-side-nav{
     width: 240px;
-    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif!important;
+    font-family: Twixer-Roobert,"Helvetica Neue",Helvetica,Arial,sans-serif!important;
     /*font-size: 62.5% !important;*/
     position: absolute;
     top: 60px;
@@ -104,7 +113,7 @@
     font-size: 12px!important
 }
 #live-channels .tw-border-radius-rounded {
-    border-radius: 9000px!important;
+    border-radius: 100%!important;
 }
 
 
@@ -145,3 +154,51 @@
 /*    position: relative;*/
 /*    width: 100%*/
 /*}*/
+
+.tw-c-text-alt {
+    color: #dedee3;
+}
+.tw-c-text-alt-2 {
+    color: #adadb8;
+}
+.favorite-checkbox{
+    height:14px;
+    text-align: right;
+}
+.star {
+    position: relative;
+    top: 0;
+    right: 0;
+    font-size: 17px;
+    visibility: hidden;
+    cursor: pointer;
+    line-height: 14px;
+    width: 14px;
+    height: 14px;
+
+    margin: 0;
+    color: rgba(0, 0, 0, 1);
+}
+
+.star:before {
+    content: "★";
+    opacity: 20%;
+    position: absolute;
+    visibility: visible;
+}
+.star:hover:before {
+    color: #ffc107;
+    opacity: 100%;
+}
+
+.star:checked:before {
+    text-shadow: 1px 1px 0 #7a7a7a;
+    opacity: 100%;
+    color: #ffc107;
+    content: "★";
+    position: absolute;
+}
+
+.star:hover:checked:before {
+    opacity: 80%;
+}

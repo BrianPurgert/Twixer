@@ -32,8 +32,13 @@
     "run_at": "document_idle"
   }],
   "web_accessible_resources": [
-    "fonts/*.woff2",
-    "/oauth2/*"
+    "twitch.css",
+    "/oauth2/*",
+    "fonts/Roobert-Bold.woff2",
+    "fonts/Roobert-Regular.woff",
+    "fonts/Roobert-Regular.woff2",
+    "fonts/Roobert-SemiBold.woff",
+    "fonts/Roobert-SemiBold.woff2"
   ],
   "background": {
     "scripts": ["eventPage.js"],
