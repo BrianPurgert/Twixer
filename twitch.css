@@ -24,8 +24,8 @@
     width: 9px;
 
 }
-
-.channel-page{
+/* Move Mixer page for sidebar */
+.channel-page, [_ngcontent-c0]  .content{
     margin-left: 240px;
 }
 #mixer-side-nav{

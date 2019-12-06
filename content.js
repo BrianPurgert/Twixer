@@ -70,7 +70,7 @@ async function mixerStreams (userId) {
 // }
 
 // getElements((els) => {
-// 	console.log(els) // here do the map thing from above
+// 	console.log(els)
 // 	const out = els.map((el) => {
 // 		const [channelName, game, viewerCount] = el.innerText.split('\n\n')
 // 		return {channelName, game, viewerCount}
@@ -98,7 +98,7 @@ function streamerTemplate(channelName, href, src, game, viewerCount){
                 </div>
                 <div data-a-target="side-nav-live-status" class="side-nav-card__live-status tw-flex-shrink-0 tw-mg-l-05">
                     <div class="tw-align-items-center tw-flex">
-                        <div style="background-color: ${ isMixer ? '#1fbaed' : '#1fbaed' }" class="tw-border-radius-rounded tw-channel-status-indicator tw-channel-status-indicator--live tw-channel-status-indicator--small tw-inline-block tw-relative"></div>
+                        <div style="background-color: ${ isMixer ? '#1fbaed' : '#1fbaed' }" class="twixer-status-indicator"></div>
                         <div class="tw-mg-l-05"><span class="tw-c-text-alt tw-font-size-6">${viewerCount}</span></div>
                     </div>
                     <div class="favorite-checkbox">
