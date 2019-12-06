@@ -1,10 +1,6 @@
-
 document.body.onload = function() {
 	chrome.storage.sync.get(['mixer','twitch'], function(details) {
 		if (!chrome.runtime.error) {
-			// document.getElementById("log").textContent = JSON.stringify(details.mixer, undefined, 4)
-			// document.getElementById("log2").textContent = JSON.stringify(details.twitch, undefined, 4)
-
 			let twitchPlaceholder = `${details.twitch.display_name} (${details.twitch.id})`
 			document.getElementById("twitchInput").placeholder = twitchPlaceholder
 			let mixerPlaceholder = `${details.mixer.token} (${details.mixer.userId})`

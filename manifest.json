@@ -33,9 +33,7 @@
   }],
   "web_accessible_resources": [
     "fonts/*.woff2",
-    "/oauth2/*",
-    "myimportfile1.html",
-    "myimportfile2.html"
+    "/oauth2/*"
   ],
   "background": {
     "scripts": ["eventPage.js"],
