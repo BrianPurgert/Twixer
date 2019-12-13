@@ -1,3 +1,6 @@
+// client-id: yr67fty5tcazl2ew3jda8sw17cy87d
+// client-secret: 1pvfofspvt2bjujcjc3tn0ozcv05tg
+
 document.body.onload = function() {
 	chrome.storage.sync.get(['mixer','twitch'], function(details) {
 		if (!chrome.runtime.error) {
@@ -9,18 +12,6 @@ document.body.onload = function() {
 	})
 }
 
-// async function channelDetails (name) {
-// 	const url = `https://mixer.com/api/v1/channels/${name}`
-// 	let response = await fetch(url)
-// 	let details = await response.json()
-// }
-
-// document.getElementById("mixerInput").addEventListener("keydown", function(event) {
-// 	event.preventDefault();
-// 	if (event.key === 'Enter') {
-// 		document.getElementById("mixerUpdate").click();
-// 	}
-// })
 
 document.getElementById("mixerUpdate").onclick = updateMixer
 
@@ -38,6 +29,12 @@ async function updateMixer() {
 }
 
 document.getElementById("twitchUpdate").onclick = updateTwitch
+
+var authorizing = browser.identity.launchWebAuthFlow(
+
+)
+// cmjgjblfkpegeijaeddmfogbgpnjmlpe
+// https://id.twitch.tv/oauth2/authorize?client_id=v2kiaeylw9qbkwpfl7lmrczcchpkpc&redirect_uri=chrome-extension://omejdljcfhmldgkndfhoeogdjghlghek/options/options.html&response_type=token&scope=user_read&force_verify=true
 // https://api.twitch.tv/helix/streams?from_id=57102172
 
 async function updateTwitch() {

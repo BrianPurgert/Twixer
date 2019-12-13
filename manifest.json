@@ -2,7 +2,7 @@
   "manifest_version": 2,
 
   "name": "Twixer",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Add your followed Mixer streamers to your Twitch.tv sidebar",
   "author": "Brian A. Purgert II",
   "icons": {
@@ -10,7 +10,7 @@
     "128": "icons/128.png"
   },
   "browser_action": {
-    "default_icon": "icon.png",
+    "default_icon": "icons/icon.png",
     "default_popup": "popup.html",
     "default_title": "Twixer"
   },
@@ -18,21 +18,21 @@
     "identity",
     "tabs",
     "webNavigation",
-    "https://mixer.com/*",
-    "https://twitch.tv/*",
+    "*://*.mixer.com/*",
+    "*://*.twitch.tv/*",
     "*://*.google.com/*",
     "storage",
     "alarms"
   ],
 
   "content_scripts": [{
-    "css": ["styles.css","twitch.css"],
+    "css": ["twixer.css"],
     "js": ["content.js"],
-    "matches": ["https://www.twitch.tv/*","https://mixer.com/*"],
+    "matches": ["*://*.twitch.tv/*","*://*.mixer.com/*"],
     "run_at": "document_idle"
   }],
   "web_accessible_resources": [
-    "twitch.css",
+    "twixer.css",
     "/oauth2/*",
     "fonts/Roobert-Bold.woff2",
     "fonts/Roobert-Regular.woff",
@@ -41,9 +41,9 @@
     "fonts/Roobert-SemiBold.woff2"
   ],
   "background": {
-    "scripts": ["eventPage.js"],
+    "scripts": ["eventPage.js","background.js"],
     "persistent": false
   },
-  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self' https://mixer.com/*"
-
+  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self' https://mixer.com/*",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwxZTD4x0y9ihtdK2U8gQEUyGjBykPzpSYztyF1CWiMC7Kuy1nsqhYZMJ6h4pLVSnd63LSF9wP2L7tPERbgdgECLTBIouS2neexbJkZhw8hNeVX/EvTa0gN1XTG+9CASX8UAIlXxhorBQ6JLR8FLkhNFQB1kKz435Qrhw/IvVtakPsD8NYlKsKYVlfjXTEKbFRFYDBKKpDpo92HDI2jJ9YCOxyWL9iiSEcz/zRESIecfJl9TtfMkdHKZgyqx6zvKmDa5GxXGlEhBygfMBXldDwjlotXwMM6GKngzRSJTuDB3V/mxbKn+wKnxJshATual52k4Fm8WRM0+bjk2+MWqs4QIDAQAB"
 }

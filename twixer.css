@@ -15,20 +15,37 @@
     font-weight: 700;
     src: url('chrome-extension://__MSG_@@extension_id__/fonts/Roobert-Bold.woff2') format("woff2"),url('chrome-extension://__MSG_@@extension_id__/fonts/Roobert-SemiBold.woff') format("woff")
 }
-.twixer-status-indicator{
+
+.mixer-status-indicator{
     background-color: #1fbaed;
+
+}
+
+.twitch-status-indicator{
+    background-color: #e91916;
+}
+
+.twixer-status-indicator{
     border-radius: 9000px !important;
     position: relative !important;
     display: inline-block !important;
-    height: 9px;
-    width: 9px;
+    height: 8px;
+    width: 8px;
+}
+
+.streamer-card{
 
 }
+.streamer-card:hover{
+    background: #26262c;
+}
+
 /* Move Mixer page for sidebar */
 .channel-page, [_ngcontent-c0]  .content{
     margin-left: 240px;
 }
 #mixer-side-nav{
+    overflow-y: scroll;
     width: 240px;
     font-family: Twixer-Roobert,"Helvetica Neue",Helvetica,Arial,sans-serif!important;
     /*font-size: 62.5% !important;*/
