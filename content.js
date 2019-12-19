@@ -1,14 +1,5 @@
-function log (output){
-	let css = "text-shadow: 3px 0px 0px #CE5937, -3px 0px 0px #CE5937, 0px 3px 0px #4A78C1, 0px -3px 0px #4A78C1;" +
-	          "background: #444;" +
-	          "color: #bada55;" +
-	          "padding: 2px;" +
-	          "border-radius:2px;" +
-	          "font-size: 15px;"
+const liveChannels = document.querySelector('[data-a-target="side-nav-header-expanded"] + div.tw-relative.tw-transition-group, #live-channels')
 
-	console.log("%cTwixer %s", css, output.toString());
-	console.log(output)
-}
 
 function htmlToElement (html) {
 	let template = document.createElement('template')
@@ -23,45 +14,30 @@ function mountMixerSidebar() {
 	mixerSidebarParent.appendChild(mixerSidebar)
 }
 
-// TODO:
-//https://static-cdn.jtvnw.net/jtv_user_pictures/c829484a-c662-40de-a243-00ec253cabbb-profile_image-300x300.png
-//https://static-cdn.jtvnw.net/previews-ttv/live_user_clix-{width}x{height}.jpg
-async function twitchStreams (userId) {
-	let init = { headers: { 'Client-ID': 'yr67fty5tcazl2ew3jda8sw17cy87d' }, }
-	//ttps://api.twitch.tv/helix/users?login%5B%5D=solaryfortnite&login%5B%5D=calculator1x&login%5B%5D=je
-	//https://api.twitch.tv/kraken/streams?channel%5B%5D=198506129&channel%5B%5D=
-	let streamsUrl    = `https://api.twitch.tv/helix/users/follows?first=100&from_id=${userId}`
+
+
+async function twitchStreams (accessToken) {
+	let init = {
+		headers: {
+			'Client-ID': 'yr67fty5tcazl2ew3jda8sw17cy87d',
+			'authorization': `OAuth ${accessToken}`,
+			'Accept': 'application/vnd.twitchtv.v5+json'
+		},
+	}
+	let streamsUrl    = `https://api.twitch.tv/kraken/streams/followed?limit=100&offset=0`
 	let response = await fetch(streamsUrl,init)
 	let streams  = await response.json()
-	let xyz = streams.data.filter(stream => {
-		return stream.type === "live"
-	})
-	console.log(xyz)
-	let ids = streams.data.map(stream => {return `id=${stream.user_id}`}).join('&')
-	let usersUrl = `https://api.twitch.tv/helix/users?${ids}`
-	let usersResponse = await fetch(usersUrl,init)
-	let users  = await usersResponse.json()
-
-	const combined = streams.data.map(stream => {
-		//TODO: Uncaught (in promise) TypeError: Cannot read property 'find' of undefined
-		let result = users.data.find(user => {
-			return user.id === stream.user_id
-		})
-		return {...stream, ...result}
-	})
-	console.log(combined)
-
-	combined.forEach(streamer => {
+	console.log(streams.streams)
+	streams.streams.forEach(streamer => {
 		addStreamerElement(
-			streamer.display_name,
-			`https://www.twitch.tv/${streamer.user_name}`,
-			streamer.profile_image_url,
-			streamer.title,
-			streamer.viewer_count,
+			streamer.channel.display_name,
+			`https://www.twitch.tv/${streamer.channel.display_name}`,
+			streamer.channel.logo,
+			streamer.game,
+			streamer.viewers,
 			false
 		)
 	})
-
 }
 
 async function mixerStreams (userId) {
@@ -80,29 +56,6 @@ async function mixerStreams (userId) {
 					)
 				})
 }
-
-
-function listElementsExist() {
-	return !!([...document.querySelector('.side-nav-header').nextSibling.childNodes])
-}
-
-function getElements(cb) {
-	const interval = setInterval(() => {
-		if (listElementsExist()) {
-			clearInterval(interval)
-			cb([...document.querySelector('.side-nav-header').nextSibling.childNodes])
-		}
-	}, 1000)
-}
-
-// getElements((els) => {
-// 	console.log(els)
-// 	const out = els.map((el) => {
-// 		const [channelName, game, viewerCount] = el.innerText.split('\n\n')
-// 		return {channelName, game, viewerCount}
-// 	})
-// 	console.log(out)
-// })
 
 function streamerTemplate(channelName, href, src, game, viewerCount, isMixer){
 
@@ -130,7 +83,7 @@ function streamerTemplate(channelName, href, src, game, viewerCount, isMixer){
                         </div>
                     </div>
                     <div class="favorite-checkbox">
-                    	<input class="star" type="checkbox" title="Favorite"/>
+                    	<input id="${channelName}" class="star" type="checkbox" title="Favorite"/>
 					</div>
                 </div>
             </div>
@@ -141,6 +94,12 @@ function streamerTemplate(channelName, href, src, game, viewerCount, isMixer){
 
 function kFormatter(num) {
 	return Math.abs(num) > 999 ? Math.sign(num)*((Math.abs(num)/1000).toFixed(1)) + 'K' : Math.sign(num)*Math.abs(num)
+}
+
+function clearStreamers() {
+	while(liveChannels.firstChild){
+		liveChannels.removeChild(liveChannels.firstChild)
+	}
 }
 
 // TODO: add option to open in current tab/new tab
@@ -157,7 +116,6 @@ function addStreamerElement (channelName, href, src, game, viewerCount,isMixer) 
 			isMixer
 		)
 	)
-	console.log(window.location.hostname)
 	if (window.location.hostname === "mixer.com"){
 		let twitchFollowedChannels = document.querySelector('#live-channels')
 		twitchFollowedChannels.appendChild(followedStreamerTemplate)
@@ -167,19 +125,34 @@ function addStreamerElement (channelName, href, src, game, viewerCount,isMixer) 
 	}
 }
 
+function updateStreams(mxToken,twToken){
+	clearStreamers()
+	mixerStreams(mxToken)
+	twitchStreams(twToken)
+}
+
+
 document.body.onload = function() {
 	chrome.storage.sync.get(['mixer','twitch'], function(details) {
 		if (!chrome.runtime.error) {
+			let mxToken = details.mixer.userId
+			let twToken = details.twitch.access_token
 			if (window.location.hostname === "mixer.com"){
 				mountMixerSidebar()
-				twitchStreams(details.twitch.id)
+				let intervalID = setInterval(updateStreams, 20000,mxToken, twToken)
 
 			}
-			mixerStreams(details.mixer.userId)
+			if (window.location.hostname === "www.twitch.tv"){
+				// clearStreamers()
+				// mixerStreams(details.mixer.userId)
+				// twitchStreams(details.twitch.access_token)
+				// updateStreams(details.mixer.userId,details.twitch.access_token)
+				let intervalID = setInterval(updateStreams, 20000,mxToken, twToken)
+
+			}
 		}
 	})
 }
 
-console.log(window.location.hostname)
 
 

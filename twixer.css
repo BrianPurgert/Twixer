@@ -18,7 +18,6 @@
 
 .mixer-status-indicator{
     background-color: #1fbaed;
-
 }
 
 .twitch-status-indicator{
@@ -44,12 +43,17 @@
 .channel-page, [_ngcontent-c0]  .content{
     margin-left: 240px;
 }
+[_nghost-c87],.content[_ngcontent-c0]  {
+    margin-left: 240px;
+}
+
 #mixer-side-nav{
     overflow-y: scroll;
+    height: 100%;
     width: 240px;
     font-family: Twixer-Roobert,"Helvetica Neue",Helvetica,Arial,sans-serif!important;
-    /*font-size: 62.5% !important;*/
-    position: absolute;
+    padding-bottom: 80px;
+    position: fixed;
     top: 60px;
     left: 0;
     bottom: 0;
