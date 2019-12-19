@@ -14,8 +14,10 @@
     "default_popup": "popup.html",
     "default_title": "Twixer"
   },
+  "options_page": "oauth/oauth2.html",
   "permissions": [
     "identity",
+    "identity.email",
     "tabs",
     "webNavigation",
     "*://*.mixer.com/*",
@@ -25,15 +27,17 @@
     "alarms"
   ],
 
-  "content_scripts": [{
+  "content_scripts": [
+    {
     "css": ["twixer.css"],
     "js": ["content.js"],
     "matches": ["*://*.twitch.tv/*","*://*.mixer.com/*"],
     "run_at": "document_idle"
-  }],
+    }
+  ],
   "web_accessible_resources": [
     "twixer.css",
-    "/oauth2/*",
+    "oauth/*",
     "fonts/Roobert-Bold.woff2",
     "fonts/Roobert-Regular.woff",
     "fonts/Roobert-Regular.woff2",
@@ -41,9 +45,15 @@
     "fonts/Roobert-SemiBold.woff2"
   ],
   "background": {
-    "scripts": ["eventPage.js","background.js"],
+    "scripts": [
+      "background.js"
+    ],
     "persistent": false
   },
-  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self' https://mixer.com/*",
-  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwxZTD4x0y9ihtdK2U8gQEUyGjBykPzpSYztyF1CWiMC7Kuy1nsqhYZMJ6h4pLVSnd63LSF9wP2L7tPERbgdgECLTBIouS2neexbJkZhw8hNeVX/EvTa0gN1XTG+9CASX8UAIlXxhorBQ6JLR8FLkhNFQB1kKz435Qrhw/IvVtakPsD8NYlKsKYVlfjXTEKbFRFYDBKKpDpo92HDI2jJ9YCOxyWL9iiSEcz/zRESIecfJl9TtfMkdHKZgyqx6zvKmDa5GxXGlEhBygfMBXldDwjlotXwMM6GKngzRSJTuDB3V/mxbKn+wKnxJshATual52k4Fm8WRM0+bjk2+MWqs4QIDAQAB"
+  "oauth2": {
+    "client_id": "925882476420-gg2rd7od1estoj9eksq22nim9t8mc3dj.apps.googleusercontent.com",
+    "scopes":[""]
+  },
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwxZTD4x0y9ihtdK2U8gQEUyGjBykPzpSYztyF1CWiMC7Kuy1nsqhYZMJ6h4pLVSnd63LSF9wP2L7tPERbgdgECLTBIouS2neexbJkZhw8hNeVX/EvTa0gN1XTG+9CASX8UAIlXxhorBQ6JLR8FLkhNFQB1kKz435Qrhw/IvVtakPsD8NYlKsKYVlfjXTEKbFRFYDBKKpDpo92HDI2jJ9YCOxyWL9iiSEcz/zRESIecfJl9TtfMkdHKZgyqx6zvKmDa5GxXGlEhBygfMBXldDwjlotXwMM6GKngzRSJTuDB3V/mxbKn+wKnxJshATual52k4Fm8WRM0+bjk2+MWqs4QIDAQAB",
+  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self' https://mixer.com/*"
 }

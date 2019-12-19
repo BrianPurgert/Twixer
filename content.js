@@ -81,20 +81,6 @@ async function mixerStreams (userId) {
 				})
 }
 
-// async function channelDetails (name) {
-// 	const url = `https://mixer.com/api/v1/channels/${name}`
-// 	const response = await fetch(url)
-// 	const details = await response.json()
-// 	if (details.online) {
-// 		addStreamerElement(
-// 			details.token,
-// 			`https://mixer.com/${details.token}`,
-// 			details.user.avatarUrl,
-// 			details.name,
-// 			details.viewersCurrent
-// 		)
-// 	}
-// }
 
 function listElementsExist() {
 	return !!([...document.querySelector('.side-nav-header').nextSibling.childNodes])

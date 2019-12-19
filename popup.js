@@ -1,13 +1,21 @@
 // client-id: yr67fty5tcazl2ew3jda8sw17cy87d
 // client-secret: 1pvfofspvt2bjujcjc3tn0ozcv05tg
 
+// https://id.twitch.tv/oauth2/authorize?client_id=yr67fty5tcazl2ew3jda8sw17cy87d&redirect_uri=https://www.twitch.tv/robots.txt&response_type=token&scope=channel_feed_read+viewing_activity_read&force_verify=true
+
+function infoMessage (json){
+
+	document.getElementById("log").textContent = JSON.stringify(json, undefined, 4)
+}
+
+
 document.body.onload = function() {
 	chrome.storage.sync.get(['mixer','twitch'], function(details) {
 		if (!chrome.runtime.error) {
-			let twitchPlaceholder = `${details.twitch.display_name} (${details.twitch.id})`
-			document.getElementById("twitchInput").placeholder = twitchPlaceholder
-			let mixerPlaceholder = `${details.mixer.token} (${details.mixer.userId})`
-			document.getElementById("mixerInput").placeholder = mixerPlaceholder
+
+			infoMessage(details)
+			document.getElementById("log2").textContent = chrome.identity.getRedirectURL()
+			
 		}
 	})
 }
@@ -28,13 +36,65 @@ async function updateMixer() {
 	})
 }
 
-document.getElementById("twitchUpdate").onclick = updateTwitch
+// document.getElementById("twitchUpdate").onclick = updateTwitch
+document.getElementById("twitch-1").onclick = twitch1
+function twitch1(){
+	chrome.identity.getProfileUserInfo(function(userinfo){
+		// console.log("userinfo",userinfo);
+		infoMessage(userinfo)
+	});
+}
 
-var authorizing = browser.identity.launchWebAuthFlow(
+document.getElementById("twitch-2").onclick = twitch2
+function twitch2(){
+	// chrome.identity.getAccounts(function callback)
+}
+document.getElementById("twitch-3").onclick = twitch3
+function twitch3(){
+		let access_token_url = "https =//id.twitch.tv/oauth2/token"
+		let authorization_url = "https =//id.twitch.tv/oauth2/authorize"
+		let client_id = "yr67fty5tcazl2ew3jda8sw17cy87d"
+		let client_secret = "1pvfofspvt2bjujcjc3tn0ozcv05tg"
+		let redirect_url = chrome.identity.getRedirectURL()
+		let scopes = ["user_read"]
+		let key = "oauth2_token"
+	let url = authorization_url    +
+	          "?client_id="     + client_id        +
+	          "&redirect_uri="  + redirect_url     +
+	          "&response_type=token"                    +
+	          "&scope="         + scopes.join('+') +
+	          "&force_verify=true"
 
-)
+	chrome.storage.sync.get(['twitch'], function(details) {
+		if (!chrome.runtime.error) {
+
+		}
+	})
+
+			let get_auth_token = chrome.identity.getAuthToken
+
+			infoMessage ({
+				"getAuthToken": get_auth_token,
+				"getRedirectURL": redirect_url
+			})
+			console.log(get_auth_token)
+
+
+	// chrome.identity.getAccounts(function callback)
+}
+
+
+
+document.getElementById("twitch-oauth").onclick = connect
+
+	function connect(){
+		window.oauth2.start()
+	}
+
+
+//chrome-extension://cmjgjblfkpegeijaeddmfogbgpnjmlpe/index.html
 // cmjgjblfkpegeijaeddmfogbgpnjmlpe
-// https://id.twitch.tv/oauth2/authorize?client_id=v2kiaeylw9qbkwpfl7lmrczcchpkpc&redirect_uri=chrome-extension://omejdljcfhmldgkndfhoeogdjghlghek/options/options.html&response_type=token&scope=user_read&force_verify=true
+// https://id.twitch.tv/oauth2/authorize?client_id=v2kiaeylw9qbkwpfl7lmrczcchpkpc&redirect_uri=chrome-extension://cmjgjblfkpegeijaeddmfogbgpnjmlpe/options/options.html&response_type=token&scope=user_read&force_verify=true
 // https://api.twitch.tv/helix/streams?from_id=57102172
 
 async function updateTwitch() {
@@ -53,18 +113,6 @@ async function updateTwitch() {
 		}
 	})
 }
-
-
-
-// const a = `https://api.twitch.tv/kraken/streams/followed?limit=100&offset=0`
-
-// const b = `https://mixer.com/api/v1/users/search?query=${query}`
-// let userId = ""
-	// `https://mixer.com/api/v1/users/current`
-	// `https://mixer.com/api/v1/users/${userId}/follows?fields=id,token&limit=100&page=0`
-	// `https://mixer.com/api/v1/users/${userId}/follows?fields=id,online,name,token,viewersCurrent,partnered,costreamId,interactive,type,audience,user&where=online:eq:true&order=viewersCurrent:desc&limit=100&page=0`
-// const c = `https://mixer.com/api/v1/users/${userId}/follows?limit=100&page=0&where=online:eq:true`
-
 
 async function channelDetails (name) {
 	const url = `https://mixer.com/api/v1/channels/${name}`
