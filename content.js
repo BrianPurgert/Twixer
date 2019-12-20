@@ -139,17 +139,13 @@ document.body.onload = function() {
 			let twToken = details.twitch.access_token
 			if (window.location.hostname === "mixer.com"){
 				mountMixerSidebar()
-				let intervalID = setInterval(updateStreams, 20000,mxToken, twToken)
-
 			}
 			if (window.location.hostname === "www.twitch.tv"){
-				// clearStreamers()
-				// mixerStreams(details.mixer.userId)
-				// twitchStreams(details.twitch.access_token)
-				// updateStreams(details.mixer.userId,details.twitch.access_token)
-				let intervalID = setInterval(updateStreams, 20000,mxToken, twToken)
 
 			}
+			updateStreams(mxToken,twToken)
+			let intervalID = setInterval(updateStreams, 20000,mxToken, twToken)
+
 		}
 	})
 }

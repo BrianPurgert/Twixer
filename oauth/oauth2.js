@@ -23,9 +23,7 @@
 
                 function(redirect_url) {
                     console.log(redirect_url)
-                    //https://cmjgjblfkpegeijaeddmfogbgpnjmlpe.chromiumapp.org/#access_token=n6s04hzwlo5vf3zhkkyyjqksmijd2k&scope=user_read&token_type=bearer
                     let accessToken = redirect_url.split('&')[0].split('=')[1]
-                    // let accessToken = redirect_url.substring(redirect_url.indexOf("=") + 1)
                     console.log(accessToken)
                     chrome.storage.sync.set({
                         "twitch": {
