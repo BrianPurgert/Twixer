@@ -3,7 +3,7 @@
 
   "name": "Twixer",
   "version": "1.0.0",
-  "description": "Add your followed Mixer streamers to your Twitch.tv sidebar",
+  "description": "Add Mixer streamers to your Twitch.tv sidebar, add ",
   "author": "Brian A. Purgert II",
   "icons": {
     "16": "icons/16.png",
@@ -14,7 +14,6 @@
     "default_popup": "popup.html",
     "default_title": "Twixer"
   },
-  "options_page": "oauth/oauth2.html",
   "permissions": [
     "identity",
     "identity.email",

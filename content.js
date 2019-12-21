@@ -120,8 +120,9 @@ function addStreamerElement (channelName, href, src, game, viewerCount,isMixer) 
 		let twitchFollowedChannels = document.querySelector('#live-channels')
 		twitchFollowedChannels.appendChild(followedStreamerTemplate)
 	} else if (window.location.hostname === "www.twitch.tv"){
-		let twitchFollowedChannels = document.querySelector('[data-a-target="side-nav-header-expanded"] + div.tw-relative.tw-transition-group')
-		twitchFollowedChannels.appendChild(followedStreamerTemplate)
+		// let twitchFollowedChannels = document.querySelector('[data-a-target="side-nav-header-expanded"] + div.tw-relative.tw-transition-group')
+		// ❌ liveChannels is null
+		liveChannels.appendChild(followedStreamerTemplate)
 	}
 }
 
