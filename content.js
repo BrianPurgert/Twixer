@@ -1,10 +1,12 @@
 // const liveChannelsContainer = '[data-a-target="side-nav-header-expanded"] + div.tw-relative.tw-transition-group, #live-channels'
 function liveChannelsContainer(){
-	return document.querySelector('[data-a-target="side-nav-header-expanded"] + div.tw-relative.tw-transition-group, #live-channels')
+	return document.body.querySelector('#live-channels')
+
+	// return document.body.querySelector('[data-a-target="side-nav-header-expanded"] + div.tw-relative.tw-transition-group, #live-channels')
 }
 
 function liveChannels(){
-	return document.querySelector('[data-a-target="side-nav-header-expanded"] + div.tw-relative.tw-transition-group > div:not(.streamer-card), #live-channels > div')
+	return document.body.querySelector('[data-a-target="side-nav-header-expanded"] + div.tw-relative.tw-transition-group > div:not(.streamer-card), #live-channels > div')
 }
 
 function htmlToElement (html) {
@@ -229,12 +231,12 @@ function sortAdd(streams, favorites) {
 	streams.sort(compare)
 	// console.table(streams)
 	let nRemove = liveChannelsContainer().childElementCount
-    while(document.contains(liveChannels())){
+    while(document.body.contains(liveChannels())){
 	    liveChannels().remove()
     }
 
 
-	let cards = document.querySelectorAll(".streamer-card")
+	let cards = document.body.querySelectorAll(".streamer-card")
 		cards.forEach(card => {
 			card.remove()
 		})
@@ -302,11 +304,11 @@ document.body.onload = function() {
 			}
 
 			if (window.location.hostname === "www.twitch.tv"){
-
+				mountTwitchSidebar()
 			}
 			favoriteListeners()
 			updateStreams(mxToken,twToken)
-			// let intervalID = setInterval(updateStreams, 20000,mxToken, twToken)
+			let intervalID = setInterval(updateStreams, 20000,mxToken, twToken)
 
 		}
 	})
