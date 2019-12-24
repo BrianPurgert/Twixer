@@ -11,6 +11,14 @@ document.body.onload = function() {
 	})
 }
 
+function clearLocalStorage(){
+	chrome.storage.local.clear(function() {
+		let error = chrome.runtime.lastError
+		if (error) {
+			console.error(error)
+		}
+	})
+}
 
 document.getElementById("mixerUpdate").onclick = updateMixer
 

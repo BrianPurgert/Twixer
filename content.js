@@ -1,5 +1,11 @@
-const liveChannels = document.querySelector('[data-a-target="side-nav-header-expanded"] + div.tw-relative.tw-transition-group, #live-channels')
+// const liveChannelsContainer = '[data-a-target="side-nav-header-expanded"] + div.tw-relative.tw-transition-group, #live-channels'
+function liveChannelsContainer(){
+	return document.querySelector('[data-a-target="side-nav-header-expanded"] + div.tw-relative.tw-transition-group, #live-channels')
+}
 
+function liveChannels(){
+	return document.querySelector('[data-a-target="side-nav-header-expanded"] + div.tw-relative.tw-transition-group > div:not(.streamer-card), #live-channels > div')
+}
 
 function htmlToElement (html) {
 	let template = document.createElement('template')
@@ -14,7 +20,17 @@ function mountMixerSidebar() {
 	mixerSidebarParent.appendChild(mixerSidebar)
 }
 
+function mountTwitchSidebar() {
+	let twitchSidebar = htmlToElement(`<div id="twitch-side-nav" class="side-nav-section"><div class="side-nav-header"><h5>Followed Channels</h5></div><div id="live-channels"></div></div>`)
+	let twitchSidebarOld = document.querySelector('.side-bar-contents .side-nav-section:not(.recommended-channels):not(.online-friends)')
+	twitchSidebarOld.replaceWith(twitchSidebar)
+}
 
+function streamer(name, link, logo, game, viewers, isMixer){
+	return {
+		name, link, logo, game, viewers, isMixer, favorite: false
+	}
+}
 
 async function twitchStreams (accessToken) {
 	let init = {
@@ -28,41 +44,68 @@ async function twitchStreams (accessToken) {
 	let response = await fetch(streamsUrl,init)
 	let streams  = await response.json()
 	console.log(streams.streams)
-	streams.streams.forEach(streamer => {
-		addStreamerElement(
-			streamer.channel.display_name,
-			`https://www.twitch.tv/${streamer.channel.display_name}`,
-			streamer.channel.logo,
-			streamer.game,
-			streamer.viewers,
+
+	let twitchStreamers = streams.streams.map(twStreamer => {
+		return streamer(
+			twStreamer.channel.display_name,
+			`https://www.twitch.tv/${twStreamer.channel.display_name}`,
+			twStreamer.channel.logo,
+			twStreamer.game,
+			twStreamer.viewers,
 			false
 		)
 	})
+
+	// streams.streams.forEach(streamer => {
+	// 	addStreamerElement(
+	// 		streamer.channel.display_name,
+	// 		`https://www.twitch.tv/${streamer.channel.display_name}`,
+	// 		streamer.channel.logo,
+	// 		streamer.game,
+	// 		streamer.viewers,
+	// 		false
+	// 	)
+	// })
+	return twitchStreamers
 }
 
 async function mixerStreams (userId) {
 				let url      = `https://mixer.com/api/v1/users/${userId}/follows?fields=id,online,name,token,viewersCurrent,user,type&where=online:eq:true&order=viewersCurrent:desc&limit=100&page=0`
 				let response = await fetch(url)
 				let details  = await response.json()
-				details.forEach(streamer => {
-					console.log(streamer)
-					addStreamerElement(
-						streamer.token,
-						`https://mixer.com/${streamer.token}`,
-						streamer.user.avatarUrl,
-						streamer.type.name,
-						streamer.viewersCurrent,
-						true
-					)
-				})
+
+	let mixerStreamers = details.map(mxStreamer => {
+		return streamer(
+			mxStreamer.token,
+			`https://mixer.com/${mxStreamer.token}`,
+			mxStreamer.user.avatarUrl,
+			mxStreamer.type.name,
+			mxStreamer.viewersCurrent,
+			true
+		)
+	})
+
+	return mixerStreamers
+
+				// details.forEach(streamer => {
+				// 	addStreamerElement(
+				// 		streamer.token,
+				// 		`https://mixer.com/${streamer.token}`,
+				// 		streamer.user.avatarUrl,
+				// 		streamer.type.name,
+				// 		streamer.viewersCurrent,
+				// 		true
+				// 	)
+				// })
 }
 
-function streamerTemplate(channelName, href, src, game, viewerCount, isMixer){
+function streamerTemplate(channelName, href, src, game, viewerCount, isMixer, favorite){
+let openNewTab = false
 
 	return `<div class="streamer-card tw-transition tw-transition--duration-medium tw-transition--enter-done tw-transition__scale-over tw-transition__scale-over--enter-done" style="transition-property: transform, opacity; transition-timing-function: ease;">
     <div>
         <div class="side-nav-card tw-align-items-center tw-flex tw-relative" style="">
-        <a ${openNewTab} class="side-nav-card__link tw-align-items-center tw-flex tw-flex-nowrap tw-full-width tw-interactive tw-link tw-link--hover-underline-none tw-pd-x-1 tw-pd-y-05" data-a-id="followed-channel-0" data-a-target="followed-channel" href="${href}">
+        <a ${openNewTab? 'rel="noopener noreferrer" target="_blank"' : ''} class="side-nav-card__link tw-align-items-center tw-flex tw-flex-nowrap tw-full-width tw-interactive tw-link tw-link--hover-underline-none tw-pd-x-1 tw-pd-y-05" data-a-id="followed-channel-0" data-a-target="followed-channel" href="${href}">
             <div class="side-nav-card__avatar tw-align-items-center tw-flex-shrink-0">
                 <figure aria-label="${channelName}" class="tw-avatar tw-avatar--size-30"><img class="tw-block tw-border-radius-rounded tw-image tw-image-avatar" alt="${channelName}" src="${src}"></figure>
             </div>
@@ -83,7 +126,7 @@ function streamerTemplate(channelName, href, src, game, viewerCount, isMixer){
                         </div>
                     </div>
                     <div class="favorite-checkbox">
-                    	<input id="${channelName}" class="star" type="checkbox" title="Favorite"/>
+                    	<input id="${channelName}" ${favorite? 'checked' : ''} class="star" type="checkbox" title="Favorite"/>
 					</div>
                 </div>
             </div>
@@ -92,44 +135,160 @@ function streamerTemplate(channelName, href, src, game, viewerCount, isMixer){
 </div>`
 }
 
+
+
+
+
+function favoriteToggle(name) {
+	chrome.storage.sync.get(['favorites'], function(data) {
+		if (!chrome.runtime.error) {
+			let fav = new Set(data.favorites)
+			fav.has(name) ? 	fav.delete(name) : fav.add(name)
+			chrome.storage.sync.set({"favorites": [...fav]})
+		}
+	})
+
+}
+
 function kFormatter(num) {
 	return Math.abs(num) > 999 ? Math.sign(num)*((Math.abs(num)/1000).toFixed(1)) + 'K' : Math.sign(num)*Math.abs(num)
 }
 
-function clearStreamers() {
-	while(liveChannels.firstChild){
-		liveChannels.removeChild(liveChannels.firstChild)
-	}
-}
-
 // TODO: add option to open in current tab/new tab
-// let openNewTab = 'rel="noopener noreferrer" target="_blank"'
+// let openNewTab = ''
 let openNewTab = ''
-function addStreamerElement (channelName, href, src, game, viewerCount,isMixer) {
+function addStreamerElement (name, link, logo, game, viewers, isMixer, favorite = false) {
 	let followedStreamerTemplate = htmlToElement(
 		streamerTemplate(
-			channelName,
-			href,
-			src,
+			name,
+			link,
+			logo,
 			game,
-			kFormatter(viewerCount),
-			isMixer
+			kFormatter(viewers),
+			isMixer,
+			favorite
 		)
 	)
 	if (window.location.hostname === "mixer.com"){
-		let twitchFollowedChannels = document.querySelector('#live-channels')
-		twitchFollowedChannels.appendChild(followedStreamerTemplate)
+		// let twitchFollowedChannels = document.querySelector('#live-channels')
+		liveChannelsContainer().appendChild(followedStreamerTemplate)
+		// twitchFollowedChannels.appendChild(followedStreamerTemplate)
 	} else if (window.location.hostname === "www.twitch.tv"){
 		// let twitchFollowedChannels = document.querySelector('[data-a-target="side-nav-header-expanded"] + div.tw-relative.tw-transition-group')
 		// ❌ liveChannels is null
-		liveChannels.appendChild(followedStreamerTemplate)
+		liveChannelsContainer().appendChild(followedStreamerTemplate)
+	}
+
+}
+
+function favoriteListeners() {
+	liveChannelsContainer().addEventListener("click", function (event) {
+		if (event.target && event.target.matches("input.star")) {
+			favoriteToggle(event.target.id)
+			console.log(event.target.id)
+		}
+	})
+}
+function compare(a, b) {
+	if(a.favorite && !b.favorite){
+		return -1
+	}
+	if (!a.favorite && b.favorite){
+		return 1
+	}
+	if (a.viewers > b.viewers) {
+		return -1
+	}
+	if (a.viewers < b.viewers) {
+		return 1
+	}
+	ap('should never get here')
+	console.log([a,b])
+	return 0
+}
+
+function ap (message){
+	console.log('%c '+ message, 'background: rgb(19, 49, 72); color: white; display: block; line-height: 25px;text-align: center;')
+}
+
+function clearStreamers() {
+	while(liveChannelsContainer().firstChild){
+		liveChannelsContainer().removeChild(liveChannelsContainer().firstChild)
 	}
 }
 
-function updateStreams(mxToken,twToken){
-	clearStreamers()
-	mixerStreams(mxToken)
-	twitchStreams(twToken)
+function sortAdd(streams, favorites) {
+	streams = streams.map(streamer => {
+		if (favorites.includes(streamer.name)) {
+			console.log(streamer.name)
+			streamer.favorite = true
+		}
+		return streamer
+	})
+
+	streams.sort(compare)
+	// console.table(streams)
+	let nRemove = liveChannelsContainer().childElementCount
+    while(document.contains(liveChannels())){
+	    liveChannels().remove()
+    }
+
+
+	let cards = document.querySelectorAll(".streamer-card")
+		cards.forEach(card => {
+			card.remove()
+		})
+	streams.forEach((streamer, index) => {
+	// 	if (index < nRemove) {
+	// 		ap("removing: " + index)
+	// 		// liveChannelsContainer().replaceChild(newChild, oldChild);
+	// 		liveChannelsContainer().removeChild(liveChannelsContainer().firstChild)
+	// 	}
+
+		addStreamerElement(
+			streamer.name,
+			streamer.link,
+			streamer.logo,
+			streamer.game,
+			streamer.viewers,
+			streamer.isMixer,
+			streamer.favorite
+		)
+	})
+}
+
+async function updateStreams(mxToken, twToken) {
+	// clearStreamers()
+	let results = await Promise.all([
+		mixerStreams(mxToken),
+		twitchStreams(twToken),
+	])
+
+let streams = [...results[0], ...results[1]]
+
+	chrome.storage.sync.get('favorites', function (details) {
+		if (!chrome.runtime.error) {
+			if (typeof details.favorites !== 'undefined') {
+				sortAdd(streams, details.favorites)
+
+			} else {
+				chrome.storage.sync.set({'favorites': []})
+				ap('Reset Favorites')
+				sortAdd(streams, [])
+			}
+		} else {
+			ap('Favorites Error')
+		}
+	})
+
+
+
+
+
+
+
+	// mixerStreams(mxToken).then(r =>)
+	// twitchStreams(twToken).then(r =>)
 }
 
 
@@ -141,11 +300,13 @@ document.body.onload = function() {
 			if (window.location.hostname === "mixer.com"){
 				mountMixerSidebar()
 			}
+
 			if (window.location.hostname === "www.twitch.tv"){
 
 			}
+			favoriteListeners()
 			updateStreams(mxToken,twToken)
-			let intervalID = setInterval(updateStreams, 20000,mxToken, twToken)
+			// let intervalID = setInterval(updateStreams, 20000,mxToken, twToken)
 
 		}
 	})
