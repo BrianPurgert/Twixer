@@ -1,7 +1,6 @@
 // const liveChannelsContainer = '[data-a-target="side-nav-header-expanded"] + div.tw-relative.tw-transition-group, #live-channels'
 function liveChannelsContainer(){
 	return document.body.querySelector('#live-channels')
-
 	// return document.body.querySelector('[data-a-target="side-nav-header-expanded"] + div.tw-relative.tw-transition-group, #live-channels')
 }
 
@@ -17,13 +16,30 @@ function htmlToElement (html) {
 }
 
 function mountMixerSidebar() {
-	let mixerSidebar = htmlToElement(`<div id="mixer-side-nav" class=""><div class="side-nav-header"><h5>Followed Channels</h5></div><div id="live-channels"></div></div>`)
+	let header = `<div class="side-nav-header-mixer">
+    <h5 class="tw-font-size-6 tw-semibold tw-upcase">Followed Channels</h5>
+    <button id="toggle-sidebar">
+      <svg class="collapse-icon" width="100%" height="100%" viewBox="0 0 20 20" x="0px" y="0px">
+        <g><path d="M16 16V4h2v12h-2zM6 9l2.501-2.5-1.5-1.5-5 5 5 5 1.5-1.5-2.5-2.5h8V9H6z"></path></g>
+      </svg>
+    </button>
+  </div>`
+	let mixerSidebar = htmlToElement(`<div id="mixer-side-nav" class="">${header}<div id="live-channels"></div></div>`)
 	let mixerSidebarParent = document.querySelector('b-app .content')
 	mixerSidebarParent.appendChild(mixerSidebar)
+
+	let toggleButton = document.getElementById("toggle-sidebar")
+	let content = document.querySelector("[_ngcontent-c0] + .content")
+	toggleButton.addEventListener('click', function() {
+		document.querySelector("#mixer-side-nav").classList.toggle("collapsed")
+		content.classList.toggle("mixer-collapsed")
+	})
+
 }
 
 function mountTwitchSidebar() {
-	let twitchSidebar = htmlToElement(`<div id="twitch-side-nav" class="side-nav-section"><div class="side-nav-header"><h5>Followed Channels</h5></div><div id="live-channels"></div></div>`)
+	let header = `<div data-a-target="side-nav-header-expanded" class="side-nav-header tw-mg-1 tw-pd-t-05"><h5 class="tw-font-size-6 tw-semibold tw-upcase">Followed Channels</h5></div>`
+	let twitchSidebar = htmlToElement(`<div id="twitch-side-nav" class="side-nav-section">${header}<div id="live-channels"></div></div>`)
 	let twitchSidebarOld = document.querySelector('.side-bar-contents .side-nav-section:not(.recommended-channels):not(.online-friends)')
 	twitchSidebarOld.replaceWith(twitchSidebar)
 }
@@ -260,7 +276,6 @@ function sortAdd(streams, favorites) {
 }
 
 async function updateStreams(mxToken, twToken) {
-	// clearStreamers()
 	let results = await Promise.all([
 		mixerStreams(mxToken),
 		twitchStreams(twToken),
@@ -282,15 +297,6 @@ let streams = [...results[0], ...results[1]]
 			ap('Favorites Error')
 		}
 	})
-
-
-
-
-
-
-
-	// mixerStreams(mxToken).then(r =>)
-	// twitchStreams(twToken).then(r =>)
 }
 
 

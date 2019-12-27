@@ -34,9 +34,7 @@ body {
 .mixer {
   background-color: #212c3d;
 }
-.twitch {
-  background-color: #18181b;
-}
+
 
 .header .logo-wrapper {
   flex: 1;
@@ -59,6 +57,100 @@ body {
 #log,#log2{
   background: #efeff1;
 }
+
+/* =====  =====  =====  =====  ===== */
+.search-bar button {
+  top: 50%;
+  right: 10px;
+  opacity: 0.3;
+  position: absolute;
+  transform: translateY(-50%) rotate(-90deg) scale(0);
+  transition: all 0.2s ease-in;
+}
+
+
+.search-bar input:focus + button {
+  opacity: 1;
+  transform: translateY(-50%) rotate(0deg);
+}
+
+.mixer .search-bar input:focus + button {
+  color: #00bcf2;
+}
+.mixer .search-bar button {
+  color: #00bcf2;
+}
+.mixer .search-bar input {
+  background-color: #131d2c;
+  color: #efeff1;
+  opacity: 0.8;
+}
+
+.mixer .search-bar input:focus {
+  border-color: #00bcf2;
+  box-shadow: 0px 0px 0px 1px #00bcf2;
+  background-color: #131d2c;
+}
+
+.search-bar button {
+  background-color: transparent;
+  border: none;
+}
+
+.search-bar input,#twitch-oauth{
+  width: 100%;
+  height: 100%;
+  outline: none;
+  font-weight: 100;
+  padding-left: 36px;
+  font-family: inherit;
+  border: solid 1px transparent;
+  transition: all 0.2s ease-in;
+  border-radius: 5px;
+}
+
+
+
+.search-bar input::-webkit-input-placeholder {
+  opacity: 0.8;
+  font-weight: 100;
+  color: #efeff1;
+  transition: color 0.2s ease-in;
+}
+
+.search-bar input:focus {
+  color: #efeff1;
+}
+
+.search-bar button:hover {
+  color: #efeff1;
+}
+
+.twitch .search-bar input {
+  background-color: #3a3a3d;
+}
+
+#twitch-oauth:hover {
+  border-color: #a481e4;
+  box-shadow: 0px 0px 0px 1px #a481e4;
+  background-color: #18181b;
+}
+
+.twitch-logo path {
+  fill: #9147ff;
+  transition: fill 0.2s ease-in;
+}
+
+.twitch-logo:hover {
+  cursor: pointer;
+}
+.twitch-logo:hover path {
+  fill: #a481e4;
+}
+
+.twitch {
+  background-color: #18181b;
+}
 .twitch-button{
   background-color: #772ce8;
   color: #fff;
@@ -73,93 +165,21 @@ body {
 }
 .twitch-button:hover{
 
-border:2px solid #9147ff;
+  /*border:2px solid #9147ff;*/
   box-shadow:  0 2px 2px 0 rgba(251, 240, 255, 0.4), 0 3px 1px -2px rgba(195, 162, 255, 0.28), 0 1px 5px 0 rgba(169, 112, 255,0.2);
   /*box-shadow: 0 4px 5px 0 rgba(169, 112, 255, 0.24), 0 1px 3px 0 rgba(177, 112, 255, 0.35), 0 2px 4px -1px rgba(157, 99, 255, 0.5);*/
 }
-
-#twitch-oauth{
-
-}
-/* =====  =====  =====  =====  ===== */
-.search-bar button {
-  top: 50%;
-  right: 10px;
-  opacity: 0.3;
-  position: absolute;
-  transform: translateY(-50%) rotate(-90deg) scale(0);
-  transition: all 0.2s ease-in;
-}
-.twitch .search-bar button {
-  color: #efeff1;
-}
-.mixer .search-bar button {
-  color: #00bcf2;
-}
-.search-bar input:focus + button {
-  opacity: 1;
-  transform: translateY(-50%) rotate(0deg);
-}
-.twitch .search-bar input:focus + button {
+#twitch-oauth:hover .twitch-person {
   color: #a481e4;
 }
-.mixer .search-bar input:focus + button {
-  color: #00bcf2;
-}
-.search-bar button {
-  background-color: transparent;
-  border: none;
-}
-/* =====  =====  =====  =====  ===== */
-.search-bar input {
-  width: 100%;
-  height: 100%;
-  outline: none;
-  font-weight: 100;
-  padding-left: 36px;
-  font-family: inherit;
-  border: solid 1px transparent;
-  transition: all 0.2s ease-in;
-  border-radius: 5px;
-}
-.twitch .search-bar input {
-  background-color: #3a3a3d;
-}
-.mixer .search-bar input {
-  background-color: #131d2c;
-  color: #efeff1;
-  opacity: 0.8;
-}
-
-.search-bar input::-webkit-input-placeholder {
-  opacity: 0.8;
-  font-weight: 100;
-  color: #efeff1;
-  transition: color 0.2s ease-in;
-}
-
-.search-bar input:focus {
+#twitch-oauth .twitch-person {
   color: #efeff1;
 }
 
-.twitch .search-bar input:focus {
-  border-color: #a481e4;
-  box-shadow: 0px 0px 0px 1px #a481e4;
-  background-color: #18181b;
-}
-
-.mixer .search-bar input:focus {
-  border-color: #00bcf2;
-  box-shadow: 0px 0px 0px 1px #00bcf2;
-  background-color: #131d2c;
-}
-.twitch-logo path {
-  fill: #9147ff;
-  transition: fill 0.2s ease-in;
-}
-.twitch-logo:hover {
-  cursor: pointer;
-}
-.twitch-logo:hover path {
-  fill: #a481e4;
+.twitch-avatar {
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  position: absolute;
+  left: -15px;
 }

@@ -25,6 +25,10 @@
                     console.log(redirect_url)
                     let accessToken = redirect_url.split('&')[0].split('=')[1]
                     console.log(accessToken)
+
+
+
+
                     chrome.storage.sync.set({
                         "twitch": {
                             "access_token": accessToken,

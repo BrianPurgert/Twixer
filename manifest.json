@@ -2,8 +2,8 @@
   "manifest_version": 2,
 
   "name": "Twixer",
-  "version": "1.0.0",
-  "description": "Add Mixer streamers to your Twitch.tv sidebar, add ",
+  "version": "2.0.0",
+  "description": "Bring Twitch to Mixer streamers to your Twitch.tv sidebar, add ",
   "author": "Brian A. Purgert II",
   "icons": {
     "16": "icons/16.png",
@@ -37,6 +37,7 @@
   "web_accessible_resources": [
     "twixer.css",
     "oauth/*",
+    "fonts/*",
     "fonts/Roobert-Bold.woff2",
     "fonts/Roobert-Regular.woff",
     "fonts/Roobert-Regular.woff2",
