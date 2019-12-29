@@ -187,15 +187,8 @@ function addStreamerElement (name, link, logo, game, viewers, isMixer, favorite 
 			favorite
 		)
 	)
-	if (window.location.hostname === "mixer.com"){
-		// let twitchFollowedChannels = document.querySelector('#live-channels')
 		liveChannelsContainer().appendChild(followedStreamerTemplate)
-		// twitchFollowedChannels.appendChild(followedStreamerTemplate)
-	} else if (window.location.hostname === "www.twitch.tv"){
-		// let twitchFollowedChannels = document.querySelector('[data-a-target="side-nav-header-expanded"] + div.tw-relative.tw-transition-group')
-		// ❌ liveChannels is null
-		liveChannelsContainer().appendChild(followedStreamerTemplate)
-	}
+
 
 }
 
@@ -235,6 +228,12 @@ function clearStreamers() {
 	}
 }
 
+function removeDefault(){
+	while(document.body.contains(liveChannels())){
+		liveChannels().remove()
+	}
+}
+
 function sortAdd(streams, favorites) {
 	streams = streams.map(streamer => {
 		if (favorites.includes(streamer.name)) {
@@ -245,11 +244,9 @@ function sortAdd(streams, favorites) {
 	})
 
 	streams.sort(compare)
-	// console.table(streams)
-	let nRemove = liveChannelsContainer().childElementCount
-    while(document.body.contains(liveChannels())){
-	    liveChannels().remove()
-    }
+
+	removeDefault()
+
 
 
 	let cards = document.body.querySelectorAll(".streamer-card")
@@ -299,23 +296,33 @@ let streams = [...results[0], ...results[1]]
 	})
 }
 
+function checkUsers(details){
+	if(typeof details.mixer === 'undefined' || typeof details.twitch === 'undefined'){
+		removeDefault()
+		let info = htmlToElement('<h4>Fill out user information by clicking on the Twixer icon and refresh the page</h4>')
+		liveChannelsContainer().appendChild(info)
+		return false
+	}
+	return true
+}
 
 document.body.onload = function() {
 	chrome.storage.sync.get(['mixer','twitch'], function(details) {
 		if (!chrome.runtime.error) {
-			let mxToken = details.mixer.userId
-			let twToken = details.twitch.access_token
 			if (window.location.hostname === "mixer.com"){
 				mountMixerSidebar()
 			}
-
 			if (window.location.hostname === "www.twitch.tv"){
 				mountTwitchSidebar()
 			}
-			favoriteListeners()
-			updateStreams(mxToken,twToken)
-			let intervalID = setInterval(updateStreams, 20000,mxToken, twToken)
 
+			if (checkUsers(details)){
+				let mxToken = details.mixer.userId
+				let twToken = details.twitch.access_token
+				favoriteListeners()
+				updateStreams(mxToken,twToken)
+				let intervalID = setInterval(updateStreams, 20000,mxToken, twToken)
+			}
 		}
 	})
 }

@@ -3,7 +3,7 @@
 
   "name": "Twixer",
   "version": "2.0.0",
-  "description": "Bring Twitch to Mixer streamers to your Twitch.tv sidebar, add ",
+  "description": "Twitch Sidebar with Mixer streamers, Twitch Sidebar on Mixer and the ability to favorite streamers",
   "author": "Brian A. Purgert II",
   "icons": {
     "16": "icons/16.png",

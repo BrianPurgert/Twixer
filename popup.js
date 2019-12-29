@@ -1,5 +1,7 @@
 function infoMessage (json){
-	document.getElementById("log").textContent = JSON.stringify(json, undefined, 4)
+console.log(json)
+	// let text = 	JSON.stringify(json, undefined, 4)
+	// document.getElementById("log").appendChild(htmlToElement(`<pre>${text}</pre>`))
 }
 
 function htmlToElement (html) {
@@ -25,50 +27,59 @@ document.body.onload = function() {
 	chrome.storage.sync.get(['mixer','twitch'], function(details) {
 		if (!chrome.runtime.error) {
 			infoMessage(details)
-			let mxToken = details.mixer.userId
-			let twToken = details.twitch.access_token
-			let init = {
-				headers: {
-					'Client-ID': 'yr67fty5tcazl2ew3jda8sw17cy87d',
-					'authorization': `OAuth ${twToken}`,
-					'Accept': 'application/vnd.twitchtv.v5+json'
-				},
+			if (typeof details.mixer !== 'undefined'){
+				let mxToken = details.mixer.userId
+				document.getElementById("mixerInput").placeholder = `${details.mixer.token}`
 			}
 
+			if (typeof details.twitch !== 'undefined'){
+				let twToken = details.twitch.access_token
+				let init    = {
+					headers: {
+						'Client-ID':     'yr67fty5tcazl2ew3jda8sw17cy87d',
+						'authorization': `OAuth ${twToken}`,
+						'Accept':        'application/vnd.twitchtv.v5+json'
+					},
+				}
+				console.log('1')
+				twitchValidate(init).then(r => {
+					twitchUser(r.user_id, init).then(r => {
+						let user = r.data[0]
+						console.log(user)
+						let twitchUser   = document.getElementById('twitch-user')
+						let twitchAvatar = htmlToElement(`<img class="twitch-avatar" alt="User Avatar" src="${user.profile_image_url}">`)
+						let twitchOauth  = document.getElementById('twitch-oauth')
 
-			twitchValidate(init).then(r =>{
-				twitchUser(r.user_id, init).then(r =>{
-					infoMessage (r.data)
-					let user = r.data[0]
+						twitchUser.insertBefore(twitchAvatar, twitchOauth)
+						twitchOauth.placeholder = user.display_name
+					})
 
-
-					let twitchUser = document.getElementById('twitch-user')
-					let twitchAvatar = htmlToElement(`<img class="twitch-avatar" alt="User Avatar" src="${user.profile_image_url}">`					)
-					let twitchOauth = document.getElementById('twitch-oauth')
-
-					twitchUser.insertBefore(twitchAvatar, twitchOauth)
-					twitchOauth.placeholder = user.display_name
-
-
-					// let twitchPlaceholder = `${details.twitch.display_name} (${details.twitch.id})`
-					// document.getElementById("twitch-oauth").placeholder = twitchPlaceholder
 				})
+		}
 
-			})
-
-
-			let mixerPlaceholder = `${details.mixer.token} (${details.mixer.userId})`
-			document.getElementById("mixerInput").placeholder = mixerPlaceholder
-
-			// document.getElementById("log2").textContent = chrome.identity.getRedirectURL()
 		}
 	})
+
+
 }
 
-document.getElementById("mixerUpdate").onclick = updateMixer
+
+let mixerUpdate = document.getElementById("mixer-update")
+document.getElementById("mixer-update").onclick = updateMixer
+
+document.getElementById("mixerInput").addEventListener("keydown", function(event) {
+	console.log(event.code)
+	if (event.key === "Enter") {
+
+		document.getElementById("mixer-update").click()
+	}
+})
+
 
 async function updateMixer() {
-	let token    = document.getElementById("mixerInput").value
+	let mixerInput = document.getElementById("mixerInput")
+
+	let token    = mixerInput.value
 	const url    = `https://mixer.com/api/v1/channels/${token}`
 	let response = await fetch(url)
 	let details  = await response.json()
@@ -77,6 +88,8 @@ async function updateMixer() {
 			console.log("Runtime error.")
 		}
 	})
+	document.getElementById("mixerInput").textContent = ''
+	document.getElementById("mixerInput").textContent = `${details.token}`
 }
 
 
