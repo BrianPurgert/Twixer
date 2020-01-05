@@ -23,6 +23,13 @@ async function twitchUser (userId, init){
 	return await response.json()
 }
 
+function refresh(){
+	chrome.tabs.getSelected(null, function(tab) {
+		let code = 'window.location.reload();';
+		chrome.tabs.executeScript(tab.id, {code: code});
+	});
+}
+
 document.body.onload = function() {
 	chrome.storage.sync.get(['mixer','twitch'], function(details) {
 		if (!chrome.runtime.error) {
@@ -90,6 +97,8 @@ async function updateMixer() {
 	})
 	document.getElementById("mixerInput").textContent = ''
 	document.getElementById("mixerInput").textContent = `${details.token}`
+	refresh()
+
 }
 
 

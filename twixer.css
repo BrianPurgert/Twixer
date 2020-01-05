@@ -16,7 +16,16 @@
     src: url('chrome-extension://__MSG_@@extension_id__/fonts/Roobert-Bold.woff2') format("woff2"),url('chrome-extension://__MSG_@@extension_id__/fonts/Roobert-SemiBold.woff') format("woff")
 }
 
-
+.info{
+    border: 1px dashed #d36f00;
+    padding: 23px 5px;
+    color: rgb(255, 255, 255);
+    background-color:rgba(0,0,0,0.5);
+    border-radius: 5px;
+    margin: 0px 1px;
+    box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2);
+    text-align: center;
+}
 
 .mixer-status-indicator{
     background-color: #1fbaed;

@@ -299,7 +299,7 @@ let streams = [...results[0], ...results[1]]
 function checkUsers(details){
 	if(typeof details.mixer === 'undefined' || typeof details.twitch === 'undefined'){
 		removeDefault()
-		let info = htmlToElement('<h4>Fill out user information by clicking on the Twixer icon and refresh the page</h4>')
+		let info = htmlToElement('<div class="info"><h5>Fill out both Mixer and Twitch information by clicking on the Twixer extension icon</h5></div>')
 		liveChannelsContainer().appendChild(info)
 		return false
 	}

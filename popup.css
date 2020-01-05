@@ -16,7 +16,23 @@ body {
   box-sizing: border-box;
 }
 
-.header {
+.sidebar-section{
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 5;
+  height: 200px;
+  display: flex;
+  line-height: 1;
+  padding: 0 25px;
+  position: relative;
+  align-items: center;
+  justify-content: space-around;
+  /*border-bottom: solid 1px rgba(255, 255, 255, 0.1);*/
+  transition: all 0.2s ease-in;
+}
+
+.header{
   top: 0;
   left: 0;
   right: 0;
