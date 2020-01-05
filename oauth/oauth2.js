@@ -11,7 +11,7 @@
 
 
         start: function() {
-
+            console.log("redirect_url: " + this.redirect_url)
             let url = this.authorization_url    +
                       "?client_id="     + this.client_id        +
                       "&redirect_uri="  + this.redirect_url     +

@@ -155,11 +155,11 @@ let openNewTab = false
 
 function favoriteToggle(name) {
 	chrome.storage.sync.get(['favorites'], function(data) {
-		if (!chrome.runtime.error) {
+
 			let fav = new Set(data.favorites)
 			fav.has(name) ? 	fav.delete(name) : fav.add(name)
 			chrome.storage.sync.set({"favorites": [...fav]})
-		}
+
 	})
 
 }
@@ -274,7 +274,7 @@ async function updateStreams(mxToken, twToken) {
 let streams = [...results[0], ...results[1]]
 
 	chrome.storage.sync.get('favorites', function (details) {
-		if (!chrome.runtime.error) {
+
 			if (typeof details.favorites !== 'undefined') {
 				sortAdd(streams, details.favorites)
 
@@ -283,9 +283,7 @@ let streams = [...results[0], ...results[1]]
 				ap('Reset Favorites')
 				sortAdd(streams, [])
 			}
-		} else {
-			ap('Favorites Error')
-		}
+
 	})
 }
 
@@ -301,7 +299,7 @@ function checkUsers(details){
 
 document.body.onload = function() {
 	chrome.storage.sync.get(['mixer','twitch'], function(details) {
-		if (!chrome.runtime.error) {
+
 			if (window.location.hostname === "mixer.com"){
 				mountMixerSidebar()
 			}
@@ -316,7 +314,7 @@ document.body.onload = function() {
 				updateStreams(mxToken,twToken)
 				let intervalID = setInterval(updateStreams, 20000,mxToken, twToken)
 			}
-		}
+
 	})
 }
 

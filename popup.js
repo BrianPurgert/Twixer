@@ -31,7 +31,7 @@ function refresh(){
 
 document.body.onload = function() {
 	chrome.storage.sync.get(['mixer','twitch'], function(details) {
-		if (!chrome.runtime.error) {
+
 			infoMessage(details)
 			if (typeof details.mixer !== 'undefined'){
 				let mxToken = details.mixer.userId
@@ -47,7 +47,6 @@ document.body.onload = function() {
 						'Accept':        'application/vnd.twitchtv.v5+json'
 					},
 				}
-				console.log('1')
 				twitchValidate(init).then(r => {
 					twitchUser(r.user_id, init).then(r => {
 						let user = r.data[0]
@@ -63,7 +62,7 @@ document.body.onload = function() {
 				})
 		}
 
-		}
+
 	})
 
 
@@ -84,19 +83,24 @@ document.getElementById("mixerInput").addEventListener("keydown", function(event
 
 async function updateMixer() {
 	let mixerInput = document.getElementById("mixerInput")
-
 	let token    = mixerInput.value
 	const url    = `https://mixer.com/api/v1/channels/${token}`
 	let response = await fetch(url)
 	let details  = await response.json()
+	details = {
+		"id": details.id,
+		"token": details.token,
+		"userId": details.userId,
+		"bannerUrl": details.bannerUrl,
+		"avatarUrl": details.user.avatarUrl
+	}
+	console.log(details)
 	chrome.storage.sync.set({"mixer": details}, function () {
-		if (chrome.runtime.error) {
-			console.log("Runtime error.")
-		}
+		document.getElementById("mixerInput").textContent = `${details.token}`
+		refresh()
 	})
-	document.getElementById("mixerInput").textContent = ''
-	document.getElementById("mixerInput").textContent = `${details.token}`
-	refresh()
+
+
 
 }
 
