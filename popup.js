@@ -24,10 +24,9 @@ async function twitchUser (userId, init){
 }
 
 function refresh(){
-	chrome.tabs.getSelected(null, function(tab) {
-		let code = 'window.location.reload();';
-		chrome.tabs.executeScript(tab.id, {code: code});
-	});
+	chrome.tabs.query({active: true, currentWindow: true}, function (arrayOfTabs) {
+		chrome.tabs.reload(arrayOfTabs[0].id)
+	})
 }
 
 document.body.onload = function() {

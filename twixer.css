@@ -309,24 +309,24 @@
     height:14px;
     text-align: right;
 }
+
 .star {
     position: relative;
     top: 0;
     right: 0;
-    font-size: 17px;
+    font-size: 18px;
     visibility: hidden;
     cursor: pointer;
-    line-height: 14px;
-    width: 14px;
-    height: 14px;
-
+    line-height: 17px;
+    width: 17px;
+    height: 17px;
     margin: 0;
     color: rgba(0, 0, 0, 1);
 }
 
 .star:before {
     content: "★";
-    opacity: 20%;
+    opacity: 40%;
     position: absolute;
     visibility: visible;
 }

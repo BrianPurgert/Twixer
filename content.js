@@ -153,10 +153,6 @@ let openNewTab = false
 </div>`
 }
 
-
-
-
-
 function favoriteToggle(name) {
 	chrome.storage.sync.get(['favorites'], function(data) {
 		if (!chrome.runtime.error) {
@@ -172,9 +168,6 @@ function kFormatter(num) {
 	return Math.abs(num) > 999 ? Math.sign(num)*((Math.abs(num)/1000).toFixed(1)) + 'K' : Math.sign(num)*Math.abs(num)
 }
 
-// TODO: add option to open in current tab/new tab
-// let openNewTab = ''
-let openNewTab = ''
 function addStreamerElement (name, link, logo, game, viewers, isMixer, favorite = false) {
 	let followedStreamerTemplate = htmlToElement(
 		streamerTemplate(
