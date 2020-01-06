@@ -1,7 +1,3 @@
-@import url(https://fonts.googleapis.com/icon?family=Material+Icons);
-@import url("https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i");
-@import url("https://fonts.googleapis.com/css?family=Work+Sans:100,200,300,400,500,600,700,800,900");
-
 body {
   width:630px;
   padding: 0px;
@@ -28,7 +24,6 @@ body {
   position: relative;
   align-items: center;
   justify-content: space-around;
-  /*border-bottom: solid 1px rgba(255, 255, 255, 0.1);*/
   transition: all 0.2s ease-in;
 }
 
@@ -44,13 +39,11 @@ body {
   position: relative;
   align-items: center;
   justify-content: space-around;
-  /*border-bottom: solid 1px rgba(255, 255, 255, 0.1);*/
   transition: all 0.2s ease-in;
 }
 .mixer {
   background-color: #212c3d;
 }
-
 
 .header .logo-wrapper {
   flex: 1;
@@ -74,7 +67,6 @@ body {
   background: #efeff1;
 }
 
-/* =====  =====  =====  =====  ===== */
 .search-bar button {
   top: 50%;
   right: 0px;
@@ -106,17 +98,6 @@ body {
   background-color: #131d2c;
 }
 
-/*.search-bar button {*/
-/*  !*background-color: transparent;*!*/
-/*  background-color: #22334e;*/
-/*  !*margin: 4px 0px;*!*/
-/*  !*padding: 1px;*!*/
-/*  border: 1px solid #3c506b;*/
-/*  border-radius: 4px;*/
-/*  text-align: center;*/
-/*}*/
-
-
 #mixer-update{
   text-align: center;
   padding:5px;
@@ -135,7 +116,6 @@ body {
 
 }
 
-
 .search-bar input,#twitch-oauth{
   width: 100%;
   height: 100%;
@@ -147,8 +127,6 @@ body {
   transition: all 0.2s ease-in;
   border-radius: 5px;
 }
-
-
 
 .search-bar input::-webkit-input-placeholder {
   opacity: 0.8;
@@ -203,10 +181,7 @@ body {
   border-radius: 2px;
 }
 .twitch-button:hover{
-
-  /*border:2px solid #9147ff;*/
   box-shadow:  0 2px 2px 0 rgba(251, 240, 255, 0.4), 0 3px 1px -2px rgba(195, 162, 255, 0.28), 0 1px 5px 0 rgba(169, 112, 255,0.2);
-  /*box-shadow: 0 4px 5px 0 rgba(169, 112, 255, 0.24), 0 1px 3px 0 rgba(177, 112, 255, 0.35), 0 2px 4px -1px rgba(157, 99, 255, 0.5);*/
 }
 #twitch-oauth:hover .twitch-person {
   color: #a481e4;

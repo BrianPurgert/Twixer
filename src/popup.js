@@ -1,9 +1,3 @@
-function infoMessage (json){
-console.log(json)
-	// let text = 	JSON.stringify(json, undefined, 4)
-	// document.getElementById("log").appendChild(htmlToElement(`<pre>${text}</pre>`))
-}
-
 function htmlToElement (html) {
 	let template = document.createElement('template')
 	html = html.trim()
@@ -31,13 +25,10 @@ function refresh(){
 
 document.body.onload = function() {
 	chrome.storage.sync.get(['mixer','twitch'], function(details) {
-
-			infoMessage(details)
 			if (typeof details.mixer !== 'undefined'){
 				let mxToken = details.mixer.userId
 				document.getElementById("mixerInput").placeholder = `${details.mixer.token}`
 			}
-
 			if (typeof details.twitch !== 'undefined'){
 				let twToken = details.twitch.access_token
 				let init    = {
@@ -58,24 +49,16 @@ document.body.onload = function() {
 						twitchUser.insertBefore(twitchAvatar, twitchOauth)
 						twitchOauth.placeholder = user.display_name
 					})
-
 				})
 		}
-
-
 	})
-
-
 }
 
-
-let mixerUpdate = document.getElementById("mixer-update")
 document.getElementById("mixer-update").onclick = updateMixer
 
 document.getElementById("mixerInput").addEventListener("keydown", function(event) {
 	console.log(event.code)
 	if (event.key === "Enter") {
-
 		document.getElementById("mixer-update").click()
 	}
 })

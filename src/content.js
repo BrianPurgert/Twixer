@@ -1,7 +1,6 @@
-// const liveChannelsContainer = '[data-a-target="side-nav-header-expanded"] + div.tw-relative.tw-transition-group, #live-channels'
+
 function liveChannelsContainer(){
 	return document.body.querySelector('#live-channels')
-	// return document.body.querySelector('[data-a-target="side-nav-header-expanded"] + div.tw-relative.tw-transition-group, #live-channels')
 }
 
 function liveChannels(){
@@ -73,17 +72,6 @@ async function twitchStreams (accessToken) {
 			false
 		)
 	})
-
-	// streams.streams.forEach(streamer => {
-	// 	addStreamerElement(
-	// 		streamer.channel.display_name,
-	// 		`https://www.twitch.tv/${streamer.channel.display_name}`,
-	// 		streamer.channel.logo,
-	// 		streamer.game,
-	// 		streamer.viewers,
-	// 		false
-	// 	)
-	// })
 	return twitchStreamers
 }
 
@@ -104,17 +92,6 @@ async function mixerStreams (userId) {
 	})
 
 	return mixerStreamers
-
-				// details.forEach(streamer => {
-				// 	addStreamerElement(
-				// 		streamer.token,
-				// 		`https://mixer.com/${streamer.token}`,
-				// 		streamer.user.avatarUrl,
-				// 		streamer.type.name,
-				// 		streamer.viewersCurrent,
-				// 		true
-				// 	)
-				// })
 }
 
 function streamerTemplate(channelName, href, src, game, viewerCount, isMixer, favorite){
@@ -161,7 +138,6 @@ function favoriteToggle(name) {
 			chrome.storage.sync.set({"favorites": [...fav]})
 
 	})
-
 }
 
 function kFormatter(num) {
@@ -181,8 +157,6 @@ function addStreamerElement (name, link, logo, game, viewers, isMixer, favorite 
 		)
 	)
 		liveChannelsContainer().appendChild(followedStreamerTemplate)
-
-
 }
 
 function favoriteListeners() {
@@ -215,12 +189,6 @@ function ap (message){
 	console.log('%c '+ message, 'background: rgb(19, 49, 72); color: white; display: block; line-height: 25px;text-align: center;')
 }
 
-function clearStreamers() {
-	while(liveChannelsContainer().firstChild){
-		liveChannelsContainer().removeChild(liveChannelsContainer().firstChild)
-	}
-}
-
 function removeDefault(){
 	while(document.body.contains(liveChannels())){
 		liveChannels().remove()
@@ -237,22 +205,13 @@ function sortAdd(streams, favorites) {
 	})
 
 	streams.sort(compare)
-
 	removeDefault()
-
-
 
 	let cards = document.body.querySelectorAll(".streamer-card")
 		cards.forEach(card => {
 			card.remove()
 		})
 	streams.forEach((streamer, index) => {
-	// 	if (index < nRemove) {
-	// 		ap("removing: " + index)
-	// 		// liveChannelsContainer().replaceChild(newChild, oldChild);
-	// 		liveChannelsContainer().removeChild(liveChannelsContainer().firstChild)
-	// 	}
-
 		addStreamerElement(
 			streamer.name,
 			streamer.link,
@@ -277,7 +236,6 @@ let streams = [...results[0], ...results[1]]
 
 			if (typeof details.favorites !== 'undefined') {
 				sortAdd(streams, details.favorites)
-
 			} else {
 				chrome.storage.sync.set({'favorites': []})
 				ap('Reset Favorites')
