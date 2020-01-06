@@ -1,7 +1,6 @@
-function htmlToElement (html) {
+function element (html) {
 	let template = document.createElement('template')
-	html = html.trim()
-	template.innerHTML = html
+	template.innerHTML = html.trim()
 	return template.content.firstChild
 }
 
@@ -23,11 +22,18 @@ function refresh(){
 	})
 }
 
+function insertMixerUserInfo(details) {
+	let mixerUser   = document.getElementById('mixer-user')
+	let mixerAvatar = element(`<img class="avatar" alt="User Avatar" src="${details.mixer.avatarUrl}">`)
+	let mixerInput  = document.getElementById('mixerInput')
+	mixerUser.insertBefore(mixerAvatar, mixerInput)
+	document.getElementById("mixerInput").placeholder = `${details.mixer.token}`
+}
+
 document.body.onload = function() {
 	chrome.storage.sync.get(['mixer','twitch'], function(details) {
 			if (typeof details.mixer !== 'undefined'){
-				let mxToken = details.mixer.userId
-				document.getElementById("mixerInput").placeholder = `${details.mixer.token}`
+				insertMixerUserInfo(details)
 			}
 			if (typeof details.twitch !== 'undefined'){
 				let twToken = details.twitch.access_token
@@ -41,9 +47,8 @@ document.body.onload = function() {
 				twitchValidate(init).then(r => {
 					twitchUser(r.user_id, init).then(r => {
 						let user = r.data[0]
-						console.log(user)
 						let twitchUser   = document.getElementById('twitch-user')
-						let twitchAvatar = htmlToElement(`<img class="twitch-avatar" alt="User Avatar" src="${user.profile_image_url}">`)
+						let twitchAvatar = element(`<img class="avatar" alt="User Avatar" src="${user.profile_image_url}">`)
 						let twitchOauth  = document.getElementById('twitch-oauth')
 
 						twitchUser.insertBefore(twitchAvatar, twitchOauth)
@@ -57,7 +62,6 @@ document.body.onload = function() {
 document.getElementById("mixer-update").onclick = updateMixer
 
 document.getElementById("mixerInput").addEventListener("keydown", function(event) {
-	console.log(event.code)
 	if (event.key === "Enter") {
 		document.getElementById("mixer-update").click()
 	}
@@ -77,14 +81,10 @@ async function updateMixer() {
 		"bannerUrl": details.bannerUrl,
 		"avatarUrl": details.user.avatarUrl
 	}
-	console.log(details)
 	chrome.storage.sync.set({"mixer": details}, function () {
 		document.getElementById("mixerInput").textContent = `${details.token}`
 		refresh()
 	})
-
-
-
 }
 
 

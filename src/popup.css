@@ -1,199 +1,215 @@
+@import url(https://fonts.googleapis.com/icon?family=Material+Icons);
+/*@import url("https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i");*/
+/*@import url("https://fonts.googleapis.com/css?family=Work+Sans:100,200,300,400,500,600,700,800,900");*/
+
 body {
-  width:630px;
-  padding: 0px;
-  background-color: rgb(0, 0, 0);
-  font-family: Roobert, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    width: 630px;
+    padding: 0px;
+    background-color: rgb(0, 0, 0);
+    font-family: Roobert, "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
+
 *,
 *:before,
 *:after {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-.sidebar-section{
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 5;
-  height: 200px;
-  display: flex;
-  line-height: 1;
-  padding: 0 25px;
-  position: relative;
-  align-items: center;
-  justify-content: space-around;
-  transition: all 0.2s ease-in;
+.sidebar-section {
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 5;
+    height: 200px;
+    display: flex;
+    line-height: 1;
+    padding: 0 25px;
+    position: relative;
+    align-items: center;
+    justify-content: space-around;
+    transition: all 0.2s ease-in;
 }
 
-.header{
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 5;
-  height: 60px;
-  display: flex;
-  line-height: 1;
-  padding: 0 25px;
-  position: relative;
-  align-items: center;
-  justify-content: space-around;
-  transition: all 0.2s ease-in;
+.header {
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 5;
+    height: 60px;
+    display: flex;
+    line-height: 1;
+    padding: 0 25px;
+    position: relative;
+    align-items: center;
+    justify-content: space-around;
+    transition: all 0.2s ease-in;
 }
+
 .mixer {
-  background-color: #212c3d;
+    background-color: #212c3d;
 }
 
 .header .logo-wrapper {
-  flex: 1;
-  display: flex;
-  align-items: center;
+    flex: 1;
+    display: flex;
+    align-items: center;
 }
+
 .header .logo-wrapper .search-bar {
-  margin-left: 25px;
-  margin-right: 25px;
+    margin-left: 25px;
+    margin-right: 25px;
 }
 
 .search-bar {
-  width: 100%;
-  height: 36px;
-  display: flex;
-  position: relative;
-  align-items: center;
+    width: 100%;
+    height: 36px;
+    display: flex;
+    position: relative;
+    align-items: center;
 }
 
-#log,#log2{
-  background: #efeff1;
+#log, #log2 {
+    background: #efeff1;
 }
 
 .search-bar button {
-  top: 50%;
-  right: 0px;
-  opacity: 0.3;
-  position: absolute;
-  transform: translateY(-50%) rotate(-90deg) scale(0);
-  transition: all 0.2s ease-in;
+    top: 50%;
+    right: 0px;
+    opacity: 0.3;
+    position: absolute;
+    transform: translateY(-50%) rotate(-90deg) scale(0);
+    transition: all 0.2s ease-in;
 }
 
 
 .search-bar input:focus + button {
-  opacity: 1;
-  transform: translateY(-50%) rotate(0deg);
+    opacity: 1;
+    transform: translateY(-50%) rotate(0deg);
 }
 
 .mixer .search-bar input:focus + button {
-  color: #00bcf2;
+    color: #00bcf2;
 }
 
 .mixer .search-bar input {
-  background-color: #131d2c;
-  color: #efeff1;
-  opacity: 0.8;
+    background-color: #131d2c;
+    color: #efeff1;
+    opacity: 0.8;
 }
 
 .mixer .search-bar input:focus {
-  border-color: #00bcf2;
-  box-shadow: 0px 0px 0px 1px #00bcf2;
-  background-color: #131d2c;
+    border-color: #00bcf2;
+    box-shadow: 0px 0px 0px 1px #00bcf2;
+    background-color: #131d2c;
 }
 
-#mixer-update{
-  text-align: center;
-  padding:5px;
-  font-size: 14px;
-  height: 36px;
-  width:80px;
-  color: #00bcf2;
-  background-color: #22334e;
-  border: 1px solid #00bcf2;
-  border-radius: 4px;
-  box-shadow: 0px 0px 0px 1px #00bcf2;
-
-}
-#mixer-update:hover{
-  background-color: #1644a2;
+#mixer-update {
+    text-align: center;
+    padding: 5px;
+    font-size: 14px;
+    height: 36px;
+    width: 80px;
+    color: #00bcf2;
+    background-color: #22334e;
+    border: 1px solid #00bcf2;
+    border-radius: 4px;
+    box-shadow: 0px 0px 0px 1px #00bcf2;
 
 }
 
-.search-bar input,#twitch-oauth{
-  width: 100%;
-  height: 100%;
-  outline: none;
-  font-weight: 100;
-  padding-left: 36px;
-  font-family: inherit;
-  border: solid 1px transparent;
-  transition: all 0.2s ease-in;
-  border-radius: 5px;
+#mixer-update:hover {
+    background-color: #1644a2;
+
+}
+
+.search-bar input, #twitch-oauth {
+    width: 100%;
+    height: 100%;
+    outline: none;
+    font-weight: 100;
+    padding-left: 36px;
+    font-family: inherit;
+    border: solid 1px transparent;
+    transition: all 0.2s ease-in;
+    border-radius: 5px;
 }
 
 .search-bar input::-webkit-input-placeholder {
-  opacity: 0.8;
-  font-weight: 100;
-  color: #efeff1;
-  transition: color 0.2s ease-in;
+    opacity: 0.8;
+    font-weight: 100;
+    color: #efeff1;
+    transition: color 0.2s ease-in;
 }
 
 .search-bar input:focus {
-  color: #efeff1;
+    color: #efeff1;
 }
 
 .search-bar button:hover {
-  color: #efeff1;
+    color: #efeff1;
 }
 
 .twitch .search-bar input {
-  background-color: #3a3a3d;
+    background-color: #3a3a3d;
 }
 
 #twitch-oauth:hover {
-  border-color: #a481e4;
-  box-shadow: 0px 0px 0px 1px #a481e4;
-  background-color: #18181b;
+    border-color: #a481e4;
+    box-shadow: 0px 0px 0px 1px #a481e4;
+    background-color: #18181b;
 }
 
 .twitch-logo path {
-  fill: #9147ff;
-  transition: fill 0.2s ease-in;
+    fill: #9147ff;
+    transition: fill 0.2s ease-in;
 }
 
 .twitch-logo:hover {
-  cursor: pointer;
+    cursor: pointer;
 }
+
 .twitch-logo:hover path {
-  fill: #a481e4;
+    fill: #a481e4;
 }
 
 .twitch {
-  background-color: #18181b;
-}
-.twitch-button{
-  background-color: #772ce8;
-  color: #fff;
-  font-size: 13px;
-  font-weight: 600;
-  white-space: nowrap;
-  padding:7px;
-  border: none;
-  margin-left:2px;
-  margin-right:2px;
-  border-radius: 2px;
-}
-.twitch-button:hover{
-  box-shadow:  0 2px 2px 0 rgba(251, 240, 255, 0.4), 0 3px 1px -2px rgba(195, 162, 255, 0.28), 0 1px 5px 0 rgba(169, 112, 255,0.2);
-}
-#twitch-oauth:hover .twitch-person {
-  color: #a481e4;
-}
-#twitch-oauth .twitch-person {
-  color: #efeff1;
+    background-color: #18181b;
 }
 
-.twitch-avatar {
-  border-radius: 50%;
-  width: 36px;
-  height: 36px;
-  position: absolute;
-  left: -15px;
+.twitch-button {
+    background-color: #772ce8;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+    padding: 7px;
+    border: none;
+    margin-left: 2px;
+    margin-right: 2px;
+    border-radius: 2px;
 }
+
+.twitch-button:hover {
+    box-shadow: 0 2px 2px 0 rgba(251, 240, 255, 0.4), 0 3px 1px -2px rgba(195, 162, 255, 0.28), 0 1px 5px 0 rgba(169, 112, 255, 0.2);
+}
+
+#twitch-oauth:hover .twitch-person {
+    color: #a481e4;
+}
+
+#twitch-oauth .twitch-person {
+    color: #efeff1;
+}
+
+.avatar {
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    position: absolute;
+    left: -15px;
+    z-index: 10;
+}
+
+

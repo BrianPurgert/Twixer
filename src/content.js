@@ -1,4 +1,3 @@
-
 function liveChannelsContainer(){
 	return document.body.querySelector('#live-channels')
 }
@@ -7,10 +6,9 @@ function liveChannels(){
 	return document.body.querySelector('[data-a-target="side-nav-header-expanded"] + div.tw-relative.tw-transition-group > div:not(.streamer-card), #live-channels > div')
 }
 
-function htmlToElement (html) {
+function element (html) {
 	let template = document.createElement('template')
-	html = html.trim()
-	template.innerHTML = html
+	template.innerHTML = html.trim()
 	return template.content.firstChild
 }
 
@@ -23,7 +21,7 @@ function mountMixerSidebar() {
       </svg>
     </button>
   </div>`
-	let mixerSidebar = htmlToElement(`<div id="mixer-side-nav" class="">${header}<div id="live-channels"></div></div>`)
+	let mixerSidebar = element(`<div id="mixer-side-nav" class="">${header}<div id="live-channels"></div></div>`)
 	let mixerSidebarParent = document.querySelector('b-app .content')
 	mixerSidebarParent.appendChild(mixerSidebar)
 
@@ -38,7 +36,7 @@ function mountMixerSidebar() {
 
 function mountTwitchSidebar() {
 	let header = `<div data-a-target="side-nav-header-expanded" class="side-nav-header tw-mg-1 tw-pd-t-05"><h5 class="tw-font-size-6 tw-semibold tw-upcase">Followed Channels</h5></div>`
-	let twitchSidebar = htmlToElement(`<div id="twitch-side-nav" class="side-nav-section">${header}<div id="live-channels"></div></div>`)
+	let twitchSidebar = element(`<div id="twitch-side-nav" class="side-nav-section">${header}<div id="live-channels"></div></div>`)
 	let twitchSidebarOld = document.querySelector('.side-bar-contents .side-nav-section:not(.recommended-channels):not(.online-friends)')
 	twitchSidebarOld.replaceWith(twitchSidebar)
 }
@@ -60,7 +58,6 @@ async function twitchStreams (accessToken) {
 	let streamsUrl    = `https://api.twitch.tv/kraken/streams/followed?limit=100&offset=0`
 	let response = await fetch(streamsUrl,init)
 	let streams  = await response.json()
-	console.log(streams.streams)
 
 	let twitchStreamers = streams.streams.map(twStreamer => {
 		return streamer(
@@ -132,12 +129,11 @@ let openNewTab = false
 
 function favoriteToggle(name) {
 	chrome.storage.sync.get(['favorites'], function(data) {
-
 			let fav = new Set(data.favorites)
 			fav.has(name) ? 	fav.delete(name) : fav.add(name)
 			chrome.storage.sync.set({"favorites": [...fav]})
-
 	})
+
 }
 
 function kFormatter(num) {
@@ -145,7 +141,7 @@ function kFormatter(num) {
 }
 
 function addStreamerElement (name, link, logo, game, viewers, isMixer, favorite = false) {
-	let followedStreamerTemplate = htmlToElement(
+	let followedStreamerTemplate = element(
 		streamerTemplate(
 			name,
 			link,
@@ -159,29 +155,20 @@ function addStreamerElement (name, link, logo, game, viewers, isMixer, favorite 
 		liveChannelsContainer().appendChild(followedStreamerTemplate)
 }
 
-function favoriteListeners() {
+function favoriteListeners(mxToken,twToken) {
 	liveChannelsContainer().addEventListener("click", function (event) {
 		if (event.target && event.target.matches("input.star")) {
 			favoriteToggle(event.target.id)
-			console.log(event.target.id)
+			updateStreams(mxToken,twToken)
 		}
 	})
 }
+
 function compare(a, b) {
-	if(a.favorite && !b.favorite){
-		return -1
-	}
-	if (!a.favorite && b.favorite){
-		return 1
-	}
-	if (a.viewers > b.viewers) {
-		return -1
-	}
-	if (a.viewers < b.viewers) {
-		return 1
-	}
-	ap('should never get here')
-	console.log([a,b])
+	if (a.favorite && !b.favorite){     return -1	}
+	if (!a.favorite && b.favorite){     return 1	}
+	if (a.viewers > b.viewers) {    return -1	}
+	if (a.viewers < b.viewers) {	return 1	}
 	return 0
 }
 
@@ -198,7 +185,6 @@ function removeDefault(){
 function sortAdd(streams, favorites) {
 	streams = streams.map(streamer => {
 		if (favorites.includes(streamer.name)) {
-			console.log(streamer.name)
 			streamer.favorite = true
 		}
 		return streamer
@@ -210,6 +196,7 @@ function sortAdd(streams, favorites) {
 	let cards = document.body.querySelectorAll(".streamer-card")
 		cards.forEach(card => {
 			card.remove()
+
 		})
 	streams.forEach((streamer, index) => {
 		addStreamerElement(
@@ -233,12 +220,10 @@ async function updateStreams(mxToken, twToken) {
 let streams = [...results[0], ...results[1]]
 
 	chrome.storage.sync.get('favorites', function (details) {
-
 			if (typeof details.favorites !== 'undefined') {
 				sortAdd(streams, details.favorites)
 			} else {
 				chrome.storage.sync.set({'favorites': []})
-				ap('Reset Favorites')
 				sortAdd(streams, [])
 			}
 
@@ -248,7 +233,7 @@ let streams = [...results[0], ...results[1]]
 function checkUsers(details){
 	if(typeof details.mixer === 'undefined' || typeof details.twitch === 'undefined'){
 		removeDefault()
-		let info = htmlToElement('<div class="info"><h5>Fill out both Mixer and Twitch information by clicking on the Twixer extension icon</h5></div>')
+		let info = element('<div class="info"><h5>Fill out both Mixer and Twitch information by clicking on the Twixer extension icon</h5></div>')
 		liveChannelsContainer().appendChild(info)
 		return false
 	}
@@ -268,7 +253,7 @@ document.body.onload = function() {
 			if (checkUsers(details)){
 				let mxToken = details.mixer.userId
 				let twToken = details.twitch.access_token
-				favoriteListeners()
+				favoriteListeners(mxToken,twToken)
 				updateStreams(mxToken,twToken)
 				let intervalID = setInterval(updateStreams, 20000,mxToken, twToken)
 			}

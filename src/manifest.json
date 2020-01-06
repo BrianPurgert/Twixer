@@ -2,7 +2,7 @@
   "manifest_version": 2,
 
   "name": "Twixer",
-  "version": "2.0.5",
+  "version": "2.0.6",
   "description": "Twitch Sidebar with Mixer streamers, Twitch Sidebar on Mixer and the ability to favorite streamers",
   "author": "Brian A. Purgert II",
   "icons": {

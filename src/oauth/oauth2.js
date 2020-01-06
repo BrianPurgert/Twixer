@@ -8,10 +8,7 @@
         scopes: ["user_read"],
         key: "oauth2_token",
 
-
-
         start: function() {
-            console.log("redirect_url: " + this.redirect_url)
             let url = this.authorization_url    +
                       "?client_id="     + this.client_id        +
                       "&redirect_uri="  + this.redirect_url     +
@@ -21,14 +18,8 @@
 
             chrome.identity.launchWebAuthFlow({'url': url, 'interactive': true},
 
-                function(redirect_url) {
-                    console.log(redirect_url)
+                function (redirect_url) {
                     let accessToken = redirect_url.split('&')[0].split('=')[1]
-                    console.log(accessToken)
-
-
-
-
                     chrome.storage.sync.set({
                         "twitch": {
                             "access_token": accessToken,
