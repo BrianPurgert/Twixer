@@ -255,7 +255,7 @@ document.body.onload = function() {
 				let twToken = details.twitch.access_token
 				favoriteListeners(mxToken,twToken)
 				updateStreams(mxToken,twToken)
-				let intervalID = setInterval(updateStreams, 20000,mxToken, twToken)
+				let intervalID = setInterval(updateStreams, 30000,mxToken, twToken)
 			}
 
 	})

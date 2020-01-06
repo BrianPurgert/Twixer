@@ -40,12 +40,6 @@
     "fonts/Roobert-SemiBold.woff",
     "fonts/Roobert-SemiBold.woff2"
   ],
-  "background": {
-    "scripts": [
-      "background.js"
-    ],
-    "persistent": false
-  },
   "oauth2": {
     "client_id": "925882476420-gg2rd7od1estoj9eksq22nim9t8mc3dj.apps.googleusercontent.com",
     "scopes":[""]
