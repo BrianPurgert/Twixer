@@ -48,6 +48,9 @@ function streamer(name, link, logo, game, viewers, isMixer){
 }
 
 async function twitchStreams (accessToken) {
+	if (accessToken === '❌'){
+		return []
+	}
 	let init = {
 		headers: {
 			'Client-ID': 'yr67fty5tcazl2ew3jda8sw17cy87d',
@@ -73,6 +76,9 @@ async function twitchStreams (accessToken) {
 }
 
 async function mixerStreams (userId) {
+	if (userId === '❌'){
+		return []
+	}
 				let url      = `https://mixer.com/api/v1/users/${userId}/follows?fields=id,online,name,token,viewersCurrent,user,type&where=online:eq:true&order=viewersCurrent:desc&limit=100&page=0`
 				let response = await fetch(url)
 				let details  = await response.json()
@@ -231,7 +237,7 @@ let streams = [...results[0], ...results[1]]
 }
 
 function checkUsers(details){
-	if(typeof details.mixer === 'undefined' || typeof details.twitch === 'undefined'){
+	if(typeof details.mixer === 'undefined' && typeof details.twitch === 'undefined'){
 		removeDefault()
 		let info = element('<div class="info"><h5>Fill out both Mixer and Twitch information by clicking on the Twixer extension icon</h5></div>')
 		liveChannelsContainer().appendChild(info)
@@ -251,8 +257,16 @@ document.body.onload = function() {
 			}
 
 			if (checkUsers(details)){
-				let mxToken = details.mixer.userId
-				let twToken = details.twitch.access_token
+				let mxToken = '❌'
+				let twToken = '❌'
+				if (typeof details.mixer !== 'undefined'){
+					mxToken = details.mixer.userId
+				}
+				if (typeof details.twitch !== 'undefined'){
+					twToken = details.twitch.access_token
+				}
+
+
 				favoriteListeners(mxToken,twToken)
 				updateStreams(mxToken,twToken)
 				let intervalID = setInterval(updateStreams, 30000,mxToken, twToken)
@@ -260,6 +274,5 @@ document.body.onload = function() {
 
 	})
 }
-
 
 
