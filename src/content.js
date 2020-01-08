@@ -41,9 +41,9 @@ function mountTwitchSidebar() {
 	twitchSidebarOld.replaceWith(twitchSidebar)
 }
 
-function streamer(name, link, logo, game, viewers, isMixer){
+function streamer(name, link, logo, game, viewers, isMixer, thumbnail, streamTitle, gameCover){
 	return {
-		name, link, logo, game, viewers, isMixer, favorite: false
+		name, link, logo, game, viewers, isMixer, favorite: false, thumbnail, streamTitle, gameCover
 	}
 }
 
@@ -65,24 +65,28 @@ async function twitchStreams (accessToken) {
 	let twitchStreamers = streams.streams.map(twStreamer => {
 		return streamer(
 			twStreamer.channel.display_name,
-			`https://www.twitch.tv/${twStreamer.channel.display_name}`,
+			`https://www.twitch.tv/${twStreamer.channel.name}`,
 			twStreamer.channel.logo,
 			twStreamer.game,
 			twStreamer.viewers,
-			false
+			false,
+			`https://static-cdn.jtvnw.net/previews-ttv/live_user_${twStreamer.channel.name}-450x253.jpg`,
+			twStreamer.channel.status,
+			`https://static-cdn.jtvnw.net/ttv-boxart/${twStreamer.game}-85x113.jpg`
 		)
 	})
 	return twitchStreamers
 }
 
 async function mixerStreams (userId) {
-	if (userId === '❌'){
-		return []
-	}
-				let url      = `https://mixer.com/api/v1/users/${userId}/follows?fields=id,online,name,token,viewersCurrent,user,type&where=online:eq:true&order=viewersCurrent:desc&limit=100&page=0`
-				let response = await fetch(url)
-				let details  = await response.json()
+	if (userId === '❌'){  return []  }
 
+	let url      = `https://mixer.com/api/v1/users/${userId}/follows?where=online:eq:true&order=viewersCurrent:desc&limit=100&page=0`
+	let response = await fetch(url)
+	let details  = await response.json()
+
+
+	//https://videocdn.mixer.com/hls/22219478-216f80c8139b96f986fcc4eaf3ceed28_source/1773376470.ts
 	let mixerStreamers = details.map(mxStreamer => {
 		return streamer(
 			mxStreamer.token,
@@ -90,7 +94,10 @@ async function mixerStreams (userId) {
 			mxStreamer.user.avatarUrl,
 			mxStreamer.type.name,
 			mxStreamer.viewersCurrent,
-			true
+			true,
+			`https://thumbs.mixer.com/channel/${mxStreamer.id}.small.jpg`,
+			mxStreamer.name,
+			mxStreamer.coverUrl
 		)
 	})
 
