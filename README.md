@@ -1,4 +1,4 @@
-![alt_text](assets/Logos/Asset 1.svg "Twixer")
+![alt_text](assets/Logos/logo.png "Twixer")
 
 Twixer is a Chrome Extension that:
 

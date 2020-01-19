@@ -70,7 +70,7 @@ async function twitchStreams (accessToken) {
 			twStreamer.game,
 			twStreamer.viewers,
 			false,
-			`https://static-cdn.jtvnw.net/previews-ttv/live_user_${twStreamer.channel.name}-450x253.jpg`,
+			`https://static-cdn.jtvnw.net/previews-ttv/live_user_${twStreamer.channel.name}-1920x1080.jpg`,
 			twStreamer.channel.status,
 			`https://static-cdn.jtvnw.net/ttv-boxart/${twStreamer.game}-85x113.jpg`
 		)
@@ -146,7 +146,6 @@ function favoriteToggle(name) {
 			fav.has(name) ? 	fav.delete(name) : fav.add(name)
 			chrome.storage.sync.set({"favorites": [...fav]})
 	})
-
 }
 
 function kFormatter(num) {
@@ -166,6 +165,16 @@ function addStreamerElement (name, link, logo, game, viewers, isMixer, favorite 
 		)
 	)
 		liveChannelsContainer().appendChild(followedStreamerTemplate)
+}
+function streamerHover(id){
+	document.querySelector(".video-player-hosting-ui__container")
+}
+function streamerHoverListeners(){
+	liveChannelsContainer().addEventListener("hover", function (event) {
+		if (event.target && event.target.matches(".streamer-card")){
+
+		}
+	})
 }
 
 function favoriteListeners(mxToken,twToken) {
@@ -209,8 +218,8 @@ function sortAdd(streams, favorites) {
 	let cards = document.body.querySelectorAll(".streamer-card")
 		cards.forEach(card => {
 			card.remove()
-
 		})
+
 	streams.forEach((streamer, index) => {
 		addStreamerElement(
 			streamer.name,
@@ -272,7 +281,6 @@ document.body.onload = function() {
 				if (typeof details.twitch !== 'undefined'){
 					twToken = details.twitch.access_token
 				}
-
 
 				favoriteListeners(mxToken,twToken)
 				updateStreams(mxToken,twToken)
