@@ -2,8 +2,8 @@
   "manifest_version": 2,
 
   "name": "Twixer",
-  "version": "2.1.0",
-  "description": "Twitch Sidebar with Mixer streamers, Twitch Sidebar on Mixer and the ability to favorite streamers",
+  "version": "2.1.1",
+  "description": "Twitch Sidebar with the ability to favorite streamers",
   "author": "Brian A. Purgert II",
   "icons": {
     "16": "icons/16.png",
@@ -15,10 +15,8 @@
     "default_title": "Twixer"
   },
   "permissions": [
-    "alarms",
     "identity",
     "storage",
-    "*://*.mixer.com/*",
     "*://*.twitch.tv/*"
   ],
 
@@ -26,7 +24,7 @@
     {
     "css": ["twixer.css"],
     "js": ["content.js"],
-    "matches": ["*://*.twitch.tv/*","*://*.mixer.com/*"],
+    "matches": ["*://*.twitch.tv/*"],
     "run_at": "document_idle"
     }
   ],
