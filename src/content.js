@@ -79,7 +79,7 @@ async function twitchStreams (accessToken) {
 }
 
 async function mixerStreams (userId) {
-	if (userId === '❌'){  return []  }
+	{  return []  }
 
 	let url      = `https://mixer.com/api/v1/users/${userId}/follows?where=online:eq:true&order=viewersCurrent:desc&limit=100&page=0`
 	let response = await fetch(url)
@@ -107,12 +107,12 @@ async function mixerStreams (userId) {
 function streamerTemplate(channelName, href, src, game, viewerCount, isMixer, favorite){
 let openNewTab = false
 
-	return `<div class="streamer-card tw-transition tw-transition--duration-medium tw-transition--enter-done tw-transition__scale-over tw-transition__scale-over--enter-done" style="transition-property: transform, opacity; transition-timing-function: ease;">
-    <div>
-        <div class="side-nav-card tw-align-items-center tw-flex tw-relative" style="">
+	return `
+<div id="${isMixer? 'mixer' : 'twitch'}-${channelName}" class="streamer-card">
+        <div class="side-nav-card tw-align-items-center tw-flex tw-relative">
         <a ${openNewTab? 'rel="noopener noreferrer" target="_blank"' : ''} class="side-nav-card__link tw-align-items-center tw-flex tw-flex-nowrap tw-full-width tw-interactive tw-link tw-link--hover-underline-none tw-pd-x-1 tw-pd-y-05" data-a-id="followed-channel-0" data-a-target="followed-channel" href="${href}">
             <div class="side-nav-card__avatar tw-align-items-center tw-flex-shrink-0">
-                <figure aria-label="${channelName}" class="tw-avatar tw-avatar--size-30"><img class="tw-block tw-border-radius-rounded tw-image tw-image-avatar" alt="${channelName}" src="${src}"></figure>
+                <figure aria-label="${channelName}" class="tw-avatar tw-avatar--size-30"><img class="tw-block tw-image tw-image-avatar twixer-avatar" alt="${channelName}" src="${src}"></figure>
             </div>
             <div class="tw-ellipsis tw-flex tw-full-width tw-justify-content-between">
                 <div data-a-target="side-nav-card-metadata" class="tw-ellipsis tw-full-width tw-mg-l-1">
@@ -136,7 +136,6 @@ let openNewTab = false
                 </div>
             </div>
         </a></div>
-    </div>
 </div>`
 }
 
@@ -166,15 +165,26 @@ function addStreamerElement (name, link, logo, game, viewers, isMixer, favorite 
 	)
 		liveChannelsContainer().appendChild(followedStreamerTemplate)
 }
-function streamerHover(id){
-	document.querySelector(".video-player-hosting-ui__container")
-}
-function streamerHoverListeners(){
-	liveChannelsContainer().addEventListener("hover", function (event) {
-		if (event.target && event.target.matches(".streamer-card")){
 
+function streamerHover(id){
+	// let siteName = id.split('-',1)
+	// let site = siteName[0]
+	// let name = siteName[1]
+	// console.log(site)
+	// console.log(name)
+	ap('site name')
+	console.log(id)
+	// document.querySelector(".video-player-hosting-ui__container")
+}
+
+function streamerHoverListeners(){
+	ap('streamerHoverListeners')
+	liveChannelsContainer().addEventListener("mouseover", function (event) {
+		// console.log(event.target)
+		if (event.target && event.target.matches(".side-nav-card")){
+			streamerHover(event.target)
 		}
-	})
+	}, false)
 }
 
 function favoriteListeners(mxToken,twToken) {
@@ -253,9 +263,9 @@ let streams = [...results[0], ...results[1]]
 }
 
 function checkUsers(details){
-	if(typeof details.mixer === 'undefined' && typeof details.twitch === 'undefined'){
+	if(typeof details.twitch === 'undefined'){
 		removeDefault()
-		let info = element('<div class="info"><h5>Fill out both Mixer and Twitch information by clicking on the Twixer extension icon</h5></div>')
+		let info = element('<div class="twixer-info"><h5>Fill out Twitch information by clicking on the Twixer extension icon</h5></div>')
 		liveChannelsContainer().appendChild(info)
 		return false
 	}
@@ -283,8 +293,9 @@ document.body.onload = function() {
 				}
 
 				favoriteListeners(mxToken,twToken)
+				streamerHoverListeners()
 				updateStreams(mxToken,twToken)
-				let intervalID = setInterval(updateStreams, 30000,mxToken, twToken)
+				let intervalID = setInterval(updateStreams, 120000,mxToken, twToken)
 			}
 
 	})

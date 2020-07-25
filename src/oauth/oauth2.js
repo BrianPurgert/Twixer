@@ -15,7 +15,7 @@
                       "&response_type=token"                    +
                       "&scope="         + this.scopes.join('+') +
                       "&force_verify=true"
-
+            console.log(url)
             chrome.identity.launchWebAuthFlow({'url': url, 'interactive': true},
 
                 function (redirect_url) {
