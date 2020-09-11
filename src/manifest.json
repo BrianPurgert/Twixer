@@ -2,7 +2,7 @@
   "manifest_version": 2,
 
   "name": "Twixer",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "Twitch Sidebar with the ability to favorite streamers",
   "author": "Brian A. Purgert II",
   "icons": {
