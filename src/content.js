@@ -12,33 +12,60 @@ function element (html) {
 	return template.content.firstChild
 }
 
-function mountMixerSidebar() {
-	let header = `<div class="side-nav-header-mixer">
-    <h5 class="tw-font-size-6 tw-semibold tw-upcase">Followed Channels</h5>
-    <button id="toggle-sidebar">
-      <svg class="collapse-icon" width="100%" height="100%" viewBox="0 0 20 20" x="0px" y="0px">
-        <g><path d="M16 16V4h2v12h-2zM6 9l2.501-2.5-1.5-1.5-5 5 5 5 1.5-1.5-2.5-2.5h8V9H6z"></path></g>
-      </svg>
-    </button>
-  </div>`
-	let mixerSidebar = element(`<div id="mixer-side-nav" class="">${header}<div id="live-channels"></div></div>`)
-	let mixerSidebarParent = document.querySelector('b-app .content')
-	mixerSidebarParent.appendChild(mixerSidebar)
+// function mountMixerSidebar() {
+// 	let header = `<div class="side-nav-header-mixer">
+//     <h5 class="tw-font-size-6 tw-semibold tw-upcase">Followed Channels</h5>
+//     <button id="toggle-sidebar">
+//       <svg class="collapse-icon" width="100%" height="100%" viewBox="0 0 20 20" x="0px" y="0px">
+//         <g><path d="M16 16V4h2v12h-2zM6 9l2.501-2.5-1.5-1.5-5 5 5 5 1.5-1.5-2.5-2.5h8V9H6z"></path></g>
+//       </svg>
+//     </button>
+//   </div>`
+// 	let mixerSidebar = element(`<div id="mixer-side-nav" class="">${header}<div id="live-channels"></div></div>`)
+// 	let mixerSidebarParent = document.querySelector('b-app .content')
+// 	mixerSidebarParent.appendChild(mixerSidebar)
+//
+// 	let toggleButton = document.getElementById("toggle-sidebar")
+// 	let content = document.querySelector("[_ngcontent-c0] + .content")
+// 	toggleButton.addEventListener('click', function() {
+// 		document.querySelector("#mixer-side-nav").classList.toggle("collapsed")
+// 		content.classList.toggle("mixer-collapsed")
+// 	})
+//
+// }
 
-	let toggleButton = document.getElementById("toggle-sidebar")
-	let content = document.querySelector("[_ngcontent-c0] + .content")
-	toggleButton.addEventListener('click', function() {
-		document.querySelector("#mixer-side-nav").classList.toggle("collapsed")
-		content.classList.toggle("mixer-collapsed")
-	})
 
-}
-
-function mountTwitchSidebar() {
+function mountTwitchSidebar(details) {
 	let header = `<div data-a-target="side-nav-header-expanded" class="side-nav-header tw-mg-1 tw-pd-t-05"><h5 class="tw-font-size-6 tw-semibold tw-upcase">Followed Channels</h5></div>`
 	let twitchSidebar = element(`<div id="twitch-side-nav" class="side-nav-section">${header}<div id="live-channels"></div></div>`)
-	let twitchSidebarOld = document.querySelector('.side-bar-contents .side-nav-section:not(.recommended-channels):not(.online-friends)')
-	twitchSidebarOld.replaceWith(twitchSidebar)
+    let sidebarCheck = setInterval(mountSidebarCheck, 1000, twitchSidebar, details)
+
+    function mountSidebarCheck(twitchSidebar,details) {
+        let twitchSidebarOld = document.querySelector('.side-bar-contents .side-nav-section:not(.recommended-channels):not(.online-friends)')
+
+        if(twitchSidebarOld){
+            twitchSidebarOld.replaceWith(twitchSidebar)
+
+            if (checkUsers(details)){
+                let mxToken = '❌'
+                let twToken = '❌'
+
+                if (typeof details.mixer !== 'undefined'){
+                    mxToken = details.mixer.userId
+                }
+
+                if (typeof details.twitch !== 'undefined'){
+                    twToken = details.twitch.access_token
+                }
+                favoriteListeners(mxToken,twToken)
+                streamerHoverListeners()
+                updateStreams(mxToken,twToken)
+                let intervalID = setInterval(updateStreams, 120000,mxToken, twToken)
+            }
+            clearInterval(sidebarCheck)
+        }
+    }
+
 }
 
 function streamer(name, link, logo, game, viewers, isMixer, thumbnail, streamTitle, gameCover){
@@ -179,12 +206,23 @@ function streamerHover(id){
 
 function streamerHoverListeners(){
 	ap('streamerHoverListeners')
-	liveChannelsContainer().addEventListener("mouseover", function (event) {
-		// console.log(event.target)
-		if (event.target && event.target.matches(".side-nav-card")){
-			streamerHover(event.target)
-		}
-	}, false)
+
+    let streamerCard = document.querySelector(".streamer-card")
+    liveChannelsContainer().addEventListener("mouseenter", function( event ) {
+        event.target.style.color = "purple"
+
+        setTimeout(function() {
+            event.target.style.color = ""
+        }, 500)
+    }, false)
+
+
+    //     liveChannelsContainer().addEventListener("mouseover", function (event) {
+	// 	if (event.target && event.target.matches(".streamer-card")){
+	// 		console.log(event.target)
+    //         streamerHover(event.target)
+	// 	}
+	// }, false)
 }
 
 function favoriteListeners(mxToken,twToken) {
@@ -274,30 +312,9 @@ function checkUsers(details){
 
 document.body.onload = function() {
 	chrome.storage.sync.get(['mixer','twitch'], function(details) {
-
-			if (window.location.hostname === "mixer.com"){
-				mountMixerSidebar()
-			}
 			if (window.location.hostname === "www.twitch.tv"){
-				mountTwitchSidebar()
+                mountTwitchSidebar(details)
 			}
-
-			if (checkUsers(details)){
-				let mxToken = '❌'
-				let twToken = '❌'
-				if (typeof details.mixer !== 'undefined'){
-					mxToken = details.mixer.userId
-				}
-				if (typeof details.twitch !== 'undefined'){
-					twToken = details.twitch.access_token
-				}
-
-				favoriteListeners(mxToken,twToken)
-				streamerHoverListeners()
-				updateStreams(mxToken,twToken)
-				let intervalID = setInterval(updateStreams, 120000,mxToken, twToken)
-			}
-
 	})
 }
 
