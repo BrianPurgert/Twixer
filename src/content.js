@@ -12,29 +12,6 @@ function element (html) {
 	return template.content.firstChild
 }
 
-// function mountMixerSidebar() {
-// 	let header = `<div class="side-nav-header-mixer">
-//     <h5 class="tw-font-size-6 tw-semibold tw-upcase">Followed Channels</h5>
-//     <button id="toggle-sidebar">
-//       <svg class="collapse-icon" width="100%" height="100%" viewBox="0 0 20 20" x="0px" y="0px">
-//         <g><path d="M16 16V4h2v12h-2zM6 9l2.501-2.5-1.5-1.5-5 5 5 5 1.5-1.5-2.5-2.5h8V9H6z"></path></g>
-//       </svg>
-//     </button>
-//   </div>`
-// 	let mixerSidebar = element(`<div id="mixer-side-nav" class="">${header}<div id="live-channels"></div></div>`)
-// 	let mixerSidebarParent = document.querySelector('b-app .content')
-// 	mixerSidebarParent.appendChild(mixerSidebar)
-//
-// 	let toggleButton = document.getElementById("toggle-sidebar")
-// 	let content = document.querySelector("[_ngcontent-c0] + .content")
-// 	toggleButton.addEventListener('click', function() {
-// 		document.querySelector("#mixer-side-nav").classList.toggle("collapsed")
-// 		content.classList.toggle("mixer-collapsed")
-// 	})
-//
-// }
-
-
 function mountTwitchSidebar(details) {
 	let header = `<div data-a-target="side-nav-header-expanded" class="side-nav-header tw-mg-1 tw-pd-t-05"><h5 class="tw-font-size-6 tw-semibold tw-upcase">Followed Channels</h5></div>`
 	let twitchSidebar = element(`<div id="twitch-side-nav" class="side-nav-section">${header}<div id="live-channels"></div></div>`)
@@ -317,5 +294,215 @@ document.body.onload = function() {
 			}
 	})
 }
+
+//  📺 📺 📺 📺 📺 📺 📺 📺 📺 📺 📺 📺 📺 📺 📺 📺 📺 📺
+//  📺 📺 📺 📺 📺 📺 📺 📺 📺 📺 📺 📺 📺 📺 📺 📺 📺 📺
+
+
+let isNavBarCollapsed
+let previewDiv = null
+let appendContainer
+let twitchIframe
+let isHovering = false
+let lastHoveredCardEl = null
+let clearOverlaysInterval = null
+
+let mutationObserver = new MutationObserver(function (mutations) {
+	let shouldRefresh = false
+	mutations.forEach(function (mutation) {
+		if (mutation.type === "childList") {
+			shouldRefresh = true
+		}
+	})
+	if (shouldRefresh) {
+		refreshNavCardsListAndListeners()
+		shouldRefresh = false
+	}
+})
+
+function isStreamerOnline(navCardEl) {
+	return !!(navCardEl.querySelector('.tw-channel-status-indicator--live') || navCardEl.querySelector('.tw-svg__asset--videorerun') || !navCardEl.querySelector('.side-nav-card__avatar--offline'))
+}
+
+function getPreviewStreamUrl(navCardEl) {
+	return "https://player.twitch.tv/?channel=" + navCardEl.href.substr(navCardEl.href.lastIndexOf("/") + 1) + "&muted&parent=twitch.tv"
+}
+
+function createIframeElement() {
+	let iframe = document.createElement("Iframe")
+	iframe.width = "100%"
+	iframe.height = "100%"
+	// iframe.style.borderRadius = "100% 100% 100% 100% / 20% 20% 20% 20%"
+	iframe.style.borderRadius = "100% 100% 100% 100% / 50% 50% 50% 50%"
+
+	return iframe
+}
+
+function createAndShowPreview() {
+	previewDiv = document.createElement("div")
+	previewDiv.classList.add("twitch_previews_previewDiv")
+	previewDiv.style.height = "100%"
+	previewDiv.style.width = "100%"
+	previewDiv.style.position = "absolute"
+	previewDiv.style.display = "block"
+	twitchIframe = createIframeElement()
+	setTimeout(function () {
+		twitchIframe.src = getPreviewStreamUrl(lastHoveredCardEl)
+	}, 250)
+	previewDiv.appendChild(twitchIframe)
+	document.querySelector('[data-test-selector="video-player__video-container"]').appendChild(previewDiv)
+}
+
+function changeAndShowPreview() {
+	if (twitchIframe.src !== getPreviewStreamUrl(lastHoveredCardEl)) {
+		if (previewDiv.style.display !== "block") {
+			setTimeout(function () {
+				twitchIframe.src = getPreviewStreamUrl(lastHoveredCardEl)
+				setTimeout(function () {
+					twitchIframe.style.display = 'block'
+				}, 300)
+			}, 50)
+		} else {
+			twitchIframe.src = getPreviewStreamUrl(lastHoveredCardEl)
+			twitchIframe.style.display = 'block'
+		}
+	} else {
+		twitchIframe.style.display = 'block'
+	}
+	previewDiv.style.display = "block"
+}
+
+function hidePreview() {
+	if (twitchIframe) {
+		twitchIframe.src = ''
+		twitchIframe.style.display = 'none'
+	} else {
+		previewDiv.style.backgroundImage = "none"
+	}
+	previewDiv.style.display = "none"
+}
+
+function clearOverlays() {
+	try {
+		if (twitchIframe) {
+			let intervalCount = 0
+			clearOverlaysInterval = setInterval(function () {
+				if (!isHovering) {
+					clearInterval(clearOverlaysInterval)
+					clearOverlaysInterval = null
+					return
+				}
+				if (twitchIframe.contentDocument) {
+					if (twitchIframe.contentDocument.querySelector('button[data-a-target="player-overlay-mature-accept"]')) {
+						twitchIframe.contentDocument.querySelector('button[data-a-target="player-overlay-mature-accept"]').click()
+						setTimeout(function () {
+							let vpo = twitchIframe.contentDocument.getElementsByClassName('video-player__overlay')[0]
+							vpo.parentNode.removeChild(vpo)
+						}, 100)
+						clearInterval(clearOverlaysInterval)
+						clearOverlaysInterval = null
+					} else {
+						if (twitchIframe.contentDocument.getElementsByClassName('video-player__overlay')[0]) {
+							let vpo = twitchIframe.contentDocument.getElementsByClassName('video-player__overlay')[0]
+							vpo.parentNode.removeChild(vpo)
+							clearInterval(clearOverlaysInterval)
+							clearOverlaysInterval = null
+						} else {
+							if (intervalCount > 5) {
+								clearInterval(clearOverlaysInterval)
+								clearOverlaysInterval = null
+							} else {
+								intervalCount++
+							}
+						}
+					}
+				}
+
+			}, 100)
+		}
+	} catch (e) {
+	}
+}
+
+function setMouseOverListeners(navCardEl) {
+	navCardEl.onmouseover = function () {
+		if (!isHovering) {
+			isHovering = true
+			lastHoveredCardEl = navCardEl
+			if (previewDiv) {
+				changeAndShowPreview()
+			} else {
+				createAndShowPreview()
+			}
+			setTimeout(function () {
+				if (isStreamerOnline(lastHoveredCardEl)) {
+					if (clearOverlaysInterval) {
+						clearInterval(clearOverlaysInterval)
+						clearOverlaysInterval = null
+					}
+					clearOverlays()
+				}
+			}, 1000)
+		} else {
+
+		}
+	}
+	navCardEl.onmouseleave = function () {
+		isHovering = false
+		setTimeout(function () {
+			let shouldSlideOut
+			if (isHovering) {
+				shouldSlideOut = false
+			} else {
+				shouldSlideOut = true
+			}
+			try {
+				if (shouldSlideOut) {
+					setTimeout(function () {
+						isHovering = false
+						hidePreview()
+					}, 25)
+				}
+			} catch (e) {
+
+			}
+
+		}, 25)
+	}
+}
+
+function setSideNavMutationObserver() {
+	mutationObserver.observe(document.getElementsByClassName("side-bar-contents")[0], {
+		childList: true,
+		subtree: true
+	})
+}
+
+function refreshNavCardsListAndListeners() {
+	isNavBarCollapsed = document.getElementsByClassName('side-nav--collapsed').length > 0
+	let navCards
+	if (isNavBarCollapsed) {
+		navCards = document.getElementsByClassName('side-nav-card')
+	} else {
+		navCards = document.getElementsByClassName('side-nav-card__link')
+	}
+	for (let i = 0; i < navCards.length; i++) {
+		navCards[i].lastImageLoadTimeStamp = new Date().getTime()
+		setMouseOverListeners(navCards[i])
+	}
+}
+
+window.addEventListener('load', (event) => {
+	setTimeout(function () {
+		appendContainer = document.body
+		document.getElementById('sideNav').style.zIndex = '10'
+		refreshNavCardsListAndListeners()
+		setSideNavMutationObserver()
+	}, 2000)
+})
+
+//  📺 📺 📺 📺 📺 📺 📺 📺 📺 📺 📺 📺 📺 📺 📺 📺 📺 📺
+//  📺 📺 📺 📺 📺 📺 📺 📺 📺 📺 📺 📺 📺 📺 📺 📺 📺 📺
+
 
 
