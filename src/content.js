@@ -325,31 +325,25 @@ function isStreamerOnline(navCardEl) {
 }
 
 function getPreviewStreamUrl(navCardEl) {
-	return "https://player.twitch.tv/?channel=" + navCardEl.href.substr(navCardEl.href.lastIndexOf("/") + 1) + "&muted&parent=twitch.tv"
+	let streamerName = navCardEl.querySelector('figure').getAttribute('aria-label')
+	return `https://player.twitch.tv/?channel=${streamerName}&muted&parent=twitch.tv`
 }
 
 function createIframeElement() {
 	let iframe = document.createElement("Iframe")
 	iframe.width = "100%"
 	iframe.height = "100%"
-	// iframe.style.borderRadius = "100% 100% 100% 100% / 20% 20% 20% 20%"
-	iframe.style.border = "ridge 5px rgba(0,0,0,0.3)"
-	iframe.style.borderRadius = "5% / 60%"
-
+	iframe.classList.add("twixer-preview-iframe")
 	return iframe
 }
 
 function createAndShowPreview() {
 	previewDiv = document.createElement("div")
-	previewDiv.classList.add("twitch_previews_previewDiv")
-	previewDiv.style.height = "100%"
-	previewDiv.style.width = "100%"
-	previewDiv.style.position = "absolute"
-	previewDiv.style.display = "block"
+	previewDiv.classList.add("twixer-preview")
 	twitchIframe = createIframeElement()
 	setTimeout(function () {
 		twitchIframe.src = getPreviewStreamUrl(lastHoveredCardEl)
-	}, 250)
+	}, 100)
 	previewDiv.appendChild(twitchIframe)
 	document.querySelector('[data-test-selector="video-player__video-container"]').appendChild(previewDiv)
 }
@@ -361,7 +355,7 @@ function changeAndShowPreview() {
 				twitchIframe.src = getPreviewStreamUrl(lastHoveredCardEl)
 				setTimeout(function () {
 					twitchIframe.style.display = 'block'
-				}, 300)
+				}, 150)
 			}, 50)
 		} else {
 			twitchIframe.src = getPreviewStreamUrl(lastHoveredCardEl)
@@ -380,7 +374,7 @@ function hidePreview() {
 	} else {
 		previewDiv.style.backgroundImage = "none"
 	}
-	previewDiv.style.display = "none"
+	// previewDiv.style.display = "none"
 }
 
 function clearOverlays() {
@@ -485,7 +479,9 @@ function refreshNavCardsListAndListeners() {
 	if (isNavBarCollapsed) {
 		navCards = document.getElementsByClassName('side-nav-card')
 	} else {
-		navCards = document.getElementsByClassName('side-nav-card__link')
+		// navCards = document.getElementsByClassName('side-nav-card__link')
+		navCards = document.getElementsByClassName('side-nav-card__avatar')
+
 	}
 	for (let i = 0; i < navCards.length; i++) {
 		navCards[i].lastImageLoadTimeStamp = new Date().getTime()
