@@ -374,7 +374,7 @@ function hidePreview() {
 	} else {
 		previewDiv.style.backgroundImage = "none"
 	}
-	// previewDiv.style.display = "none"
+	previewDiv.style.display = "none"
 }
 
 function clearOverlays() {
