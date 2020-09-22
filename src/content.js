@@ -333,7 +333,8 @@ function createIframeElement() {
 	iframe.width = "100%"
 	iframe.height = "100%"
 	// iframe.style.borderRadius = "100% 100% 100% 100% / 20% 20% 20% 20%"
-	iframe.style.borderRadius = "100% 100% 100% 100% / 50% 50% 50% 50%"
+	iframe.style.border = "ridge 5px rgba(0,0,0,0.3)"
+	iframe.style.borderRadius = "5% / 60%"
 
 	return iframe
 }
