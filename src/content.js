@@ -27,14 +27,9 @@ function mountTwitchSidebar(details) {
                 let mxToken = '❌'
                 let twToken = '❌'
 
-                if (typeof details.mixer !== 'undefined'){
-                    mxToken = details.mixer.userId
-                }
+                if (typeof details.twitch !== 'undefined') twToken = details.twitch.access_token
 
-                if (typeof details.twitch !== 'undefined'){
-                    twToken = details.twitch.access_token
-                }
-                favoriteListeners(mxToken,twToken)
+	            favoriteListeners(mxToken,twToken)
                 streamerHoverListeners()
                 updateStreams(mxToken,twToken)
                 let intervalID = setInterval(updateStreams, 120000,mxToken, twToken)
@@ -264,16 +259,15 @@ async function updateStreams(mxToken, twToken) {
 		twitchStreams(twToken),
 	])
 
-let streams = [...results[0], ...results[1]]
+	let streams = [...results[0], ...results[1]]
 
 	chrome.storage.sync.get('favorites', function (details) {
-			if (typeof details.favorites !== 'undefined') {
-				sortAdd(streams, details.favorites)
-			} else {
-				chrome.storage.sync.set({'favorites': []})
-				sortAdd(streams, [])
-			}
-
+		if (typeof details.favorites !== 'undefined') {
+			sortAdd(streams, details.favorites)
+		} else {
+			chrome.storage.sync.set({'favorites': []})
+			sortAdd(streams, [])
+		}
 	})
 }
 
@@ -437,7 +431,7 @@ function setMouseOverListeners(navCardEl) {
 					}
 					clearOverlays()
 				}
-			}, 1000)
+			}, 200)
 		} else {
 
 		}
